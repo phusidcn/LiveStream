@@ -45,8 +45,8 @@ class AudioCaptureModule: NSObject {
         }
     }
     
-    func setupDevice() {
-        
+    func setupDevice() throws {
+        self.audioDevice = AVCaptureDevice.default(.builtInMicrophone, for: .audio, position: .unspecified)
     }
     
 }

@@ -15,6 +15,10 @@
 		817119C0233C70A600595A7B /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 817119BE233C70A600595A7B /* LaunchScreen.storyboard */; };
 		817119CB233C70A700595A7B /* LiveStreamTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 817119CA233C70A700595A7B /* LiveStreamTests.swift */; };
 		817119D6233C70A700595A7B /* LiveStreamUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 817119D5233C70A700595A7B /* LiveStreamUITests.swift */; };
+		817119E5233C712400595A7B /* AVCaptureModule.swift in Sources */ = {isa = PBXBuildFile; fileRef = 817119E4233C712400595A7B /* AVCaptureModule.swift */; };
+		81E336E3233E1EF500137FB1 /* VideoCaptureModule.swift in Sources */ = {isa = PBXBuildFile; fileRef = 81BE53D8233DEDCF00C761F7 /* VideoCaptureModule.swift */; };
+		81E336E4233E1EF800137FB1 /* AudioCaptureModule.swift in Sources */ = {isa = PBXBuildFile; fileRef = 81E336E1233E1E2C00137FB1 /* AudioCaptureModule.swift */; };
+		81E336E6233E204500137FB1 /* VideoModule.swift in Sources */ = {isa = PBXBuildFile; fileRef = 81E336E5233E204500137FB1 /* VideoModule.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -49,6 +53,10 @@
 		817119D1233C70A700595A7B /* LiveStreamUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = LiveStreamUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		817119D5233C70A700595A7B /* LiveStreamUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LiveStreamUITests.swift; sourceTree = "<group>"; };
 		817119D7233C70A700595A7B /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		817119E4233C712400595A7B /* AVCaptureModule.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AVCaptureModule.swift; sourceTree = "<group>"; };
+		81BE53D8233DEDCF00C761F7 /* VideoCaptureModule.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoCaptureModule.swift; sourceTree = "<group>"; };
+		81E336E1233E1E2C00137FB1 /* AudioCaptureModule.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioCaptureModule.swift; sourceTree = "<group>"; };
+		81E336E5233E204500137FB1 /* VideoModule.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoModule.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -99,6 +107,7 @@
 		817119B2233C70A400595A7B /* LiveStream */ = {
 			isa = PBXGroup;
 			children = (
+				817119E3233C711300595A7B /* CaptureModule */,
 				817119B3233C70A400595A7B /* AppDelegate.swift */,
 				817119B5233C70A400595A7B /* SceneDelegate.swift */,
 				817119B7233C70A400595A7B /* ViewController.swift */,
@@ -126,6 +135,17 @@
 				817119D7233C70A700595A7B /* Info.plist */,
 			);
 			path = LiveStreamUITests;
+			sourceTree = "<group>";
+		};
+		817119E3233C711300595A7B /* CaptureModule */ = {
+			isa = PBXGroup;
+			children = (
+				817119E4233C712400595A7B /* AVCaptureModule.swift */,
+				81E336E5233E204500137FB1 /* VideoModule.swift */,
+				81BE53D8233DEDCF00C761F7 /* VideoCaptureModule.swift */,
+				81E336E1233E1E2C00137FB1 /* AudioCaptureModule.swift */,
+			);
+			path = CaptureModule;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -260,8 +280,12 @@
 			buildActionMask = 2147483647;
 			files = (
 				817119B8233C70A400595A7B /* ViewController.swift in Sources */,
+				81E336E6233E204500137FB1 /* VideoModule.swift in Sources */,
+				817119E5233C712400595A7B /* AVCaptureModule.swift in Sources */,
+				81E336E3233E1EF500137FB1 /* VideoCaptureModule.swift in Sources */,
 				817119B4233C70A400595A7B /* AppDelegate.swift in Sources */,
 				817119B6233C70A400595A7B /* SceneDelegate.swift in Sources */,
+				81E336E4233E1EF800137FB1 /* AudioCaptureModule.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -437,6 +461,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = SKQY859ZK7;
 				INFOPLIST_FILE = LiveStream/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -455,6 +480,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = SKQY859ZK7;
 				INFOPLIST_FILE = LiveStream/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",

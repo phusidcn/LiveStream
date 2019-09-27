@@ -60,5 +60,9 @@
 		<string>UIInterfaceOrientationLandscapeLeft</string>
 		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
+	<key>NSCameraUsageDescription</key>
+	<string>This app needs permission to access your cameras</string>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>This app needs permission to access your microphone</string>
 </dict>
 </plist>

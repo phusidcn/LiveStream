@@ -8,15 +8,14 @@
 
 import AVFoundation
 
-protocol ModifyVideoModuleDelegate {
+protocol FilterVideoDelegate {
     func didCapturePixelBuffer(_ pixelBuffer: CVPixelBuffer, _ position: CMTime, _ duration: CMTime)
 }
 
-class ModifyVideoModule: NSObject, VideoCaptureModuleDelegate {
+class FilterVideo: NSObject, CameraCaptureDelegate {
     func didCaptureVideoBuffer(_ videoBuffer: CMSampleBuffer) {
         
     }
-    
     
 }
 

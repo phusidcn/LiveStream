@@ -9,11 +9,11 @@
 import Foundation
 import AVFoundation
 
-protocol AudioCaptureModuleDelegate {
+protocol MicrophoneCaptureDelegate {
     func didCaptureAudioBuffer(_ audioBuffer: CMSampleBuffer)
 }
 
-class AudioCaptureModule: NSObject {
+class MicrophoneCapture: NSObject {
     
 //MARK: Variables
     var audioDevice: AVCaptureDevice?
@@ -22,9 +22,8 @@ class AudioCaptureModule: NSObject {
 
     var audioQueue: DispatchQueue?
     var audioOutput: AVCaptureAudioDataOutput?
-    var audioConnection: AVCaptureConnection?
     
-    var audioDelegate: AudioCaptureModuleDelegate?
+    var audioDelegate: MicrophoneCaptureDelegate?
     
 //MARK: Authorization
     func microphoneAuthorizationStatus() -> MicrophoneUsageStatus {
@@ -57,7 +56,7 @@ class AudioCaptureModule: NSObject {
     func setupDevice() throws {
         self.audioDevice = AVCaptureDevice.default(.builtInMicrophone, for: .audio, position: .unspecified)
         if (self.audioDevice == nil) {
-            throw AudioCaptureError.microphoneUnavailable
+            throw MicrophoneCaptureError.microphoneUnavailable
         }
     }
     
@@ -71,24 +70,29 @@ class AudioCaptureModule: NSObject {
                 session.addInput(self.audioDeviceInput!)
             }
             else {
-                throw AudioCaptureError.missingAudioInput
+                throw MicrophoneCaptureError.missingDeviceInput
             }
         }
     }
     
-    func setupDeviceOutput() {
+    func setupDeviceOutput(captureSession: inout AVCaptureSession?) throws {
         self.audioQueue = DispatchQueue(label: "Audio Capture Queue")
         
         self.audioOutput = AVCaptureAudioDataOutput()
         self.audioOutput!.setSampleBufferDelegate(self, queue: self.audioQueue)
         
-        self.audioConnection = self.audioOutput!.connection(with: .audio)
+        if captureSession!.canAddOutput(self.audioOutput!) {
+            captureSession!.addOutput(self.audioOutput!)
+        }
+        else {
+            throw MicrophoneCaptureError.missingDeviceOutput
+        }
     }
     
 }
 
 //MARK: AudioDataOutputSampleBufferDelegate
-extension AudioCaptureModule: AVCaptureAudioDataOutputSampleBufferDelegate {
+extension MicrophoneCapture: AVCaptureAudioDataOutputSampleBufferDelegate {
     func captureOutput(_ output: AVCaptureOutput, didOutput sampleBuffer: CMSampleBuffer, from connection: AVCaptureConnection) {
         audioDelegate?.didCaptureAudioBuffer(sampleBuffer)
     }
@@ -96,7 +100,7 @@ extension AudioCaptureModule: AVCaptureAudioDataOutputSampleBufferDelegate {
 
 
 //MARK: enum
-extension AudioCaptureModule {
+extension MicrophoneCapture {
     
     enum MicrophoneUsageStatus {
         case MicrophoneUsageAllowed
@@ -106,8 +110,9 @@ extension AudioCaptureModule {
         case MicrophoneUsageUnknown
     }
 
-    enum AudioCaptureError: Error {
+    enum MicrophoneCaptureError: Error {
         case microphoneUnavailable
-        case missingAudioInput
+        case missingDeviceInput
+        case missingDeviceOutput
     }
 }

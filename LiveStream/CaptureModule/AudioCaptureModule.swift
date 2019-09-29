@@ -15,10 +15,18 @@ protocol AudioCaptureModuleDelegate {
 
 class AudioCaptureModule: NSObject {
     
+//MARK: Variables
     var audioDevice: AVCaptureDevice?
+    
     var audioDeviceInput: AVCaptureDeviceInput?
-    var audioDelegate: AudioCaptureModuleDelegate?
 
+    var audioQueue: DispatchQueue?
+    var audioOutput: AVCaptureAudioDataOutput?
+    var audioConnection: AVCaptureConnection?
+    
+    var audioDelegate: AudioCaptureModuleDelegate?
+    
+//MARK: Authorization
     func microphoneAuthorizationStatus() -> MicrophoneUsageStatus {
         switch AVCaptureDevice.authorizationStatus(for: .audio) {
         case .authorized:
@@ -45,8 +53,36 @@ class AudioCaptureModule: NSObject {
         }
     }
     
+//MARK: Setup methods
     func setupDevice() throws {
         self.audioDevice = AVCaptureDevice.default(.builtInMicrophone, for: .audio, position: .unspecified)
+        if (self.audioDevice == nil) {
+            throw AudioCaptureError.microphoneUnavailable
+        }
+    }
+    
+    func setupDeviceInput(captureSession: inout AVCaptureSession?) throws {
+        guard let session = captureSession else {
+            throw AVCaptureModule.AVCaptureError.sessionUnavailable
+        }
+        if let audioDevice = self.audioDevice {
+            self.audioDeviceInput = try AVCaptureDeviceInput(device: audioDevice)
+            if session.canAddInput(self.audioDeviceInput!) {
+                session.addInput(self.audioDeviceInput!)
+            }
+            else {
+                throw AudioCaptureError.missingAudioInput
+            }
+        }
+    }
+    
+    func setupDeviceOutput() {
+        self.audioQueue = DispatchQueue(label: "Audio Capture Queue")
+        
+        self.audioOutput = AVCaptureAudioDataOutput()
+        self.audioOutput!.setSampleBufferDelegate(self, queue: self.audioQueue)
+        
+        self.audioConnection = self.audioOutput!.connection(with: .audio)
     }
     
 }
@@ -71,6 +107,7 @@ extension AudioCaptureModule {
     }
 
     enum AudioCaptureError: Error {
+        case microphoneUnavailable
         case missingAudioInput
     }
 }

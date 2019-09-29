@@ -10,13 +10,12 @@ import AVFoundation
 
 class AVCaptureModule: NSObject {
     
-    // MARK: Public methods
-    
     override init() {
         super.init()
         self.setup()
     }
     
+//MARK: Camera Authorization
     func cameraAuthorizationStatus() -> VideoCaptureModule.CameraUsageStatus {
         return (self.videoCaptureModule?.cameraAuthorizationStatus())!
     }
@@ -27,6 +26,7 @@ class AVCaptureModule: NSObject {
         })
     }
     
+//MARK: Microphone Authorization
     func microphoneAuthorizationStatus() -> AudioCaptureModule.MicrophoneUsageStatus {
         return (self.audioCaptureModule?.microphoneAuthorizationStatus())!
     }
@@ -37,21 +37,20 @@ class AVCaptureModule: NSObject {
         })
     }
     
+//MARK: Preview Methods
     func startVideoPreviewSession(completionHandler: @escaping (Error?) -> Void) {
         DispatchQueue(label:"Preview queue").async {
             do {
                 try self.videoCaptureModule?.setupDevice()
-                try self.audioCaptureModule?.setupDevice()
-                try self.setupDeviceInput(videoModule: self.videoCaptureModule!, audioModule: self.audioCaptureModule!)
-                try self.setupVideoOutput()
+                try self.videoCaptureModule?.setupDeviceInput(captureSession: &self.captureSession)
+                self.videoCaptureModule?.setupDeviceOutput()
                 
-                print("Previewing")
+                try self.startCaptureSession()
             }
             catch {
                 DispatchQueue.main.async {
                     completionHandler(error)
                 }
-                return
             }
             DispatchQueue.main.async {
                 completionHandler(nil)
@@ -62,19 +61,43 @@ class AVCaptureModule: NSObject {
     func stopVideoPreviewSession() {
         
     }
+
+//MARK: Record Methods
+    func startRecording(completionHandler: @escaping (Error?) -> Void) {
+        do {
+            //TODO: check whether is previewing
+            
+            try self.audioCaptureModule?.setupDevice()
+            try self.audioCaptureModule?.setupDeviceInput(captureSession: &self.captureSession)
+            self.audioCaptureModule?.setupDeviceOutput()
+        }
+        catch {
+            DispatchQueue.main.async {
+                completionHandler(error)
+            }
+        }
+        DispatchQueue.main.async {
+            completionHandler(nil)
+        }
+    }
     
+    func pauseRecording() {
+        
+    }
+    
+    func stopRecording() {
+        
+    }
+
+//MARK: Variables
     private var captureSession: AVCaptureSession?
     private var videoCaptureModule: VideoCaptureModule?
     private var audioCaptureModule: AudioCaptureModule?
-    
+    //FIXME: Where to put this ?????
     private var currentCameraInput: CameraLens?
-    
-    private var videoOutput: AVCaptureVideoDataOutput?
-    private var audioOutput: AVCaptureAudioDataOutput?
 }
 
-// MARK: Prepare session methods
-
+//MARK: Private methods
 extension AVCaptureModule {
     
     func setup() {
@@ -83,72 +106,11 @@ extension AVCaptureModule {
         self.audioCaptureModule = AudioCaptureModule()
     }
     
-    func setupDeviceInput(videoModule: VideoCaptureModule, audioModule: AudioCaptureModule) throws {
-        guard let session = self.captureSession else {
-            throw AVCaptureError.sessionUnavailable
-        }
-        if let frontCamDevice = videoModule.frontCameraDevice {
-            videoModule.frontDeviceInput = try AVCaptureDeviceInput(device: frontCamDevice)
-            if session.canAddInput(videoModule.frontDeviceInput!) {
-                session.addInput(videoModule.frontDeviceInput!)
-            }
-            else {
-                throw VideoCaptureModule.VideoCaptureError.missingFrontDeviceInput
-            }
-        } else {
-            if let backCamDevice = videoModule.backCameraDevice {
-                videoModule.backDeviceInput = try AVCaptureDeviceInput(device: backCamDevice)
-                if session.canAddInput(videoModule.backDeviceInput!) {
-                    session.addInput(videoModule.backDeviceInput!)
-                }
-                else {
-                    throw VideoCaptureModule.VideoCaptureError.missingBackDeviceInput
-                }
-            }
-            else {
-                throw VideoCaptureModule.VideoCaptureError.invalidInput
-            }
-        }
-        if let audioDevice = audioModule.audioDevice {
-            audioModule.audioDeviceInput = try AVCaptureDeviceInput(device: audioDevice)
-            if session.canAddInput(audioModule.audioDeviceInput!) {
-                session.addInput(audioModule.audioDeviceInput!)
-            }
-            else {
-                throw AudioCaptureModule.AudioCaptureError.missingAudioInput
-            }
-        }
-    }
-    
-    func setupVideoOutput() throws {
-        
+    func startCaptureSession() throws {
         guard let captureSession = self.captureSession else {
             throw AVCaptureError.sessionUnavailable
         }
-        
-        self.videoOutput = AVCaptureVideoDataOutput()
-        self.videoOutput!.videoSettings = [kCVPixelBufferPixelFormatTypeKey as String: kCVPixelFormatType_420YpCbCr8BiPlanarVideoRange]
-        self.videoOutput!.alwaysDiscardsLateVideoFrames = true
-        if captureSession.canAddOutput(self.videoOutput!) {
-            captureSession.addOutput(self.videoOutput!)
-        }
-        
-        self.audioOutput = AVCaptureAudioDataOutput()
-        
         captureSession.startRunning()
-    }
-    
-}
-
-//MARK: Audio, Video Output Delegate
-extension AVCaptureModule: AudioCaptureModuleDelegate, VideoModuleDelegate {
-
-    func didCaptureAudioBuffer(_ audioBuffer: CMSampleBuffer) {
-        
-    }
-    
-    func didCapturePixelBuffer(_ pixelBuffer: CVPixelBuffer, _ duration: CMTime, _ position: CMTime) {
-        
     }
     
 }

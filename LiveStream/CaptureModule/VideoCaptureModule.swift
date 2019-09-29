@@ -14,12 +14,21 @@ protocol VideoCaptureModuleDelegate {
 
 class VideoCaptureModule: NSObject {
         
+//MARK: Variables
     var frontCameraDevice: AVCaptureDevice?
     var backCameraDevice: AVCaptureDevice?
+    
     var frontDeviceInput: AVCaptureDeviceInput?
     var backDeviceInput: AVCaptureDeviceInput?
+    
+    var videoQueue: DispatchQueue?
+    var videoOutput: AVCaptureVideoDataOutput?
+    var videoConnection: AVCaptureConnection?
+    
     var videoDelegate: VideoCaptureModuleDelegate?
     
+    
+//MARK: Authorization
     func cameraAuthorizationStatus() -> CameraUsageStatus {
         switch AVCaptureDevice.authorizationStatus(for: .video) {
         case .authorized:
@@ -45,6 +54,7 @@ class VideoCaptureModule: NSObject {
         }
     }
     
+//MARK: Setup methods
     func setupDevice() throws {
         let deviceSession = AVCaptureDevice.DiscoverySession(deviceTypes: [.builtInWideAngleCamera], mediaType: .video, position: .unspecified)
         let deviceMap = deviceSession.devices.compactMap{ $0 }
@@ -62,6 +72,47 @@ class VideoCaptureModule: NSObject {
                 self.frontCameraDevice = device
             }
         }
+    }
+    
+    func setupDeviceInput(captureSession: inout AVCaptureSession?) throws {
+        var count = 0
+        guard let session = captureSession else {
+            throw AVCaptureModule.AVCaptureError.sessionUnavailable
+        }
+        if let frontCamDevice = self.frontCameraDevice {
+            self.frontDeviceInput = try AVCaptureDeviceInput(device: frontCamDevice)
+            if session.canAddInput(self.frontDeviceInput!) {
+                session.addInput(self.frontDeviceInput!)
+                count+=1
+            }
+            else {
+                throw VideoCaptureError.missingFrontDeviceInput
+            }
+        }
+        if let backCamDevice = self.backCameraDevice {
+            self.backDeviceInput = try AVCaptureDeviceInput(device: backCamDevice)
+            if session.canAddInput(self.backDeviceInput!) {
+                session.addInput(self.backDeviceInput!)
+                count+=1
+            }
+            else {
+                throw VideoCaptureError.missingBackDeviceInput
+            }
+        }
+        if (count == 0) {
+            throw VideoCaptureError.invalidInput
+        }
+    }
+    
+    func setupDeviceOutput() {
+        self.videoQueue = DispatchQueue(label: "Video Capture Queue")
+        
+        self.videoOutput = AVCaptureVideoDataOutput()
+        self.videoOutput!.setSampleBufferDelegate(self, queue: self.videoQueue)
+        self.videoOutput!.videoSettings = [kCVPixelBufferPixelFormatTypeKey as String: kCVPixelFormatType_420YpCbCr8BiPlanarVideoRange]
+        self.videoOutput!.alwaysDiscardsLateVideoFrames = true
+        
+        self.videoConnection = self.videoOutput!.connection(with: .video)
     }
     
 }
@@ -88,7 +139,6 @@ extension VideoCaptureModule {
         case missingFrontDeviceInput
         case missingBackDeviceInput
         case invalidInput
-        case invalidOperation
         case cameraUnavailable
         case unknownError
     }

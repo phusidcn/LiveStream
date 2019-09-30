@@ -104,40 +104,27 @@ class AVCaptureModule: NSObject {
     }
     
 //MARK: Preview methods
-    func startVideoPreviewSession() throws {
+    func startCameraPreviewSession() throws {
         guard self.captureSession != nil else {
             throw AVCaptureError.sessionUnavailable
         }
-        self.captureSession!.startRunning()
+        if self.isRunning == false {
+            self.captureSession!.startRunning()
+            self.isRunning = true
+        }
     }
     
-    func stopVideoPreviewSession() throws {
+    func stopCameraPreviewSession() throws {
         guard self.captureSession != nil else {
             throw AVCaptureError.sessionUnavailable
         }
-        self.captureSession!.stopRunning()
-    }
-
-//MARK: Record Methods
-    func startRecording(completionHandler: @escaping (Error?) -> Void) {
-        do {
+        if self.isRunning == true {
+            self.captureSession!.stopRunning()
+            self.isRunning = false
+            self.cameraCapture = nil
+            self.microphoneCapture = nil
+            self.captureSession = nil
         }
-        catch {
-            DispatchQueue.main.async {
-                completionHandler(error)
-            }
-        }
-        DispatchQueue.main.async {
-            completionHandler(nil)
-        }
-    }
-    
-    func pauseRecording() {
-        
-    }
-    
-    func stopRecording() {
-        
     }
 
 //MARK: Variables
@@ -146,6 +133,7 @@ class AVCaptureModule: NSObject {
     private var microphoneCapture: MicrophoneCapture?
     private var useCamera: Bool = false
     private var useMicrophone: Bool = false
+    private var isRunning: Bool = false
     //FIXME: Where to put this ?????
     private var currentCameraInput: CameraCapture.CameraPosition?
 }

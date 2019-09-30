@@ -9,7 +9,7 @@
 import AVFoundation
 
 protocol CameraCaptureDelegate {
-    func didCaptureVideoBuffer(_ videoBuffer: CMSampleBuffer)
+    func didCaptureCameraBuffer(_ videoBuffer: CMSampleBuffer)
 }
 
 class CameraCapture: NSObject {
@@ -135,7 +135,7 @@ class CameraCapture: NSObject {
 //MARK: VideoDataOutputSampleBufferDelegate
 extension CameraCapture: AVCaptureVideoDataOutputSampleBufferDelegate {
     func captureOutput(_ output: AVCaptureOutput, didDrop sampleBuffer: CMSampleBuffer, from connection: AVCaptureConnection) {
-        self.cameraDelegate?.didCaptureVideoBuffer(sampleBuffer)
+        self.cameraDelegate?.didCaptureCameraBuffer(sampleBuffer)
     }
 }
 

@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		72153E3023417B89009EF4B3 /* VideoRecorder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 72153E2F23417B89009EF4B3 /* VideoRecorder.swift */; };
 		72A1F5362340AFCE000B318D /* H264Encoder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 72A1F5352340AFCE000B318D /* H264Encoder.swift */; };
 		72A1F53A2340D130000B318D /* AudioEncoder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 72A1F5392340D130000B318D /* AudioEncoder.swift */; };
 		72A1F53C2340D14E000B318D /* AACEncoder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 72A1F53B2340D14E000B318D /* AACEncoder.swift */; };
@@ -44,6 +45,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		72153E2F23417B89009EF4B3 /* VideoRecorder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoRecorder.swift; sourceTree = "<group>"; };
 		72A1F5352340AFCE000B318D /* H264Encoder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = H264Encoder.swift; sourceTree = "<group>"; };
 		72A1F5392340D130000B318D /* AudioEncoder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioEncoder.swift; sourceTree = "<group>"; };
 		72A1F53B2340D14E000B318D /* AACEncoder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AACEncoder.swift; sourceTree = "<group>"; };
@@ -94,6 +96,24 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		72153E3123417BEA009EF4B3 /* Video */ = {
+			isa = PBXGroup;
+			children = (
+				72C9326E234067660060BD8D /* FilterVideo.swift */,
+				72153E2F23417B89009EF4B3 /* VideoRecorder.swift */,
+				72153E3223417C06009EF4B3 /* Decoder */,
+				72C93270234075A20060BD8D /* Encoder */,
+			);
+			path = Video;
+			sourceTree = "<group>";
+		};
+		72153E3223417C06009EF4B3 /* Decoder */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Decoder;
+			sourceTree = "<group>";
+		};
 		72A1F5342340AFA4000B318D /* VideoEncoder */ = {
 			isa = PBXGroup;
 			children = (
@@ -110,27 +130,6 @@
 				72A1F53B2340D14E000B318D /* AACEncoder.swift */,
 			);
 			path = AudioEncoder;
-			sourceTree = "<group>";
-		};
-		72A1F53D2340D247000B318D /* Decoder */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = Decoder;
-			sourceTree = "<group>";
-		};
-		72A1F53E2340D27A000B318D /* VideoOutput */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = VideoOutput;
-			sourceTree = "<group>";
-		};
-		72A1F53F2340D2B5000B318D /* FileManagerModule */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = FileManagerModule;
 			sourceTree = "<group>";
 		};
 		72C93270234075A20060BD8D /* Encoder */ = {
@@ -167,12 +166,8 @@
 			isa = PBXGroup;
 			children = (
 				817119B7233C70A400595A7B /* ViewController.swift */,
-				72C9326E234067660060BD8D /* FilterVideo.swift */,
-				72A1F53E2340D27A000B318D /* VideoOutput */,
-				72A1F53D2340D247000B318D /* Decoder */,
-				72C93270234075A20060BD8D /* Encoder */,
+				72153E3123417BEA009EF4B3 /* Video */,
 				817119E3233C711300595A7B /* Capture */,
-				72A1F53F2340D2B5000B318D /* FileManagerModule */,
 				817119B3233C70A400595A7B /* AppDelegate.swift */,
 				817119B5233C70A400595A7B /* SceneDelegate.swift */,
 				817119B9233C70A400595A7B /* Main.storyboard */,
@@ -347,6 +342,7 @@
 				81E336E3233E1EF500137FB1 /* CameraCapture.swift in Sources */,
 				817119B4233C70A400595A7B /* AppDelegate.swift in Sources */,
 				72A1F53C2340D14E000B318D /* AACEncoder.swift in Sources */,
+				72153E3023417B89009EF4B3 /* VideoRecorder.swift in Sources */,
 				72C93272234075BF0060BD8D /* VideoEncoder.swift in Sources */,
 				817119B6233C70A400595A7B /* SceneDelegate.swift in Sources */,
 				72A1F5362340AFCE000B318D /* H264Encoder.swift in Sources */,

@@ -13,7 +13,8 @@ protocol FilterVideoDelegate {
 }
 
 class FilterVideo: NSObject, CameraCaptureDelegate {
-    func didCaptureVideoBuffer(_ videoBuffer: CMSampleBuffer) {
+    
+    func didCaptureCameraBuffer(_ videoBuffer: CMSampleBuffer) {
         
     }
     

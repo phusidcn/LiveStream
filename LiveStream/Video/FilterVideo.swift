@@ -9,7 +9,7 @@
 import AVFoundation
 
 protocol FilterVideoDelegate {
-    func didCapturePixelBuffer(_ pixelBuffer: CVPixelBuffer, _ position: CMTime, _ duration: CMTime)
+    func didCapturePixelBuffer(_ pixelBuffer: CVPixelBuffer, _ presentationTimeStamp: CMTime, _ duration: CMTime)
 }
 
 class FilterVideo: NSObject, CameraCaptureDelegate {

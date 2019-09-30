@@ -61,17 +61,17 @@ class CameraCapture: NSObject {
     }
     
     func setupDevice() throws {
-        var device = AVCaptureDevice.default(.builtInWideAngleCamera, for: .video, position: .front)
-        if device != nil {
-            self.frontCameraDevice = device
+        let frontDevice = AVCaptureDevice.default(.builtInWideAngleCamera, for: .video, position: .front)
+        if frontDevice != nil {
+            self.frontCameraDevice = frontDevice
         }
         
-        device = AVCaptureDevice.default(.builtInWideAngleCamera, for: .video, position: .back)
-        if device != nil {
-            try device!.lockForConfiguration()
-            device!.focusMode = .continuousAutoFocus
-            device!.unlockForConfiguration()
-            self.backCameraDevice = device
+        let backDevice = AVCaptureDevice.default(.builtInWideAngleCamera, for: .video, position: .back)
+        if backDevice != nil {
+            try backDevice!.lockForConfiguration()
+            backDevice!.focusMode = .continuousAutoFocus
+            backDevice!.unlockForConfiguration()
+            self.backCameraDevice = backDevice
         }
     }
     
@@ -134,7 +134,7 @@ class CameraCapture: NSObject {
 
 //MARK: VideoDataOutputSampleBufferDelegate
 extension CameraCapture: AVCaptureVideoDataOutputSampleBufferDelegate {
-    func captureOutput(_ output: AVCaptureOutput, didDrop sampleBuffer: CMSampleBuffer, from connection: AVCaptureConnection) {
+    func captureOutput(_ output: AVCaptureOutput, didOutput sampleBuffer: CMSampleBuffer, from connection: AVCaptureConnection) {
         self.cameraDelegate?.didCaptureCameraBuffer(sampleBuffer)
     }
 }

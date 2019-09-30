@@ -149,13 +149,39 @@ extension AVCaptureModule {
         func capturePreset() -> AVCaptureSession.Preset {
             switch self {
             case .high:
-                return .high
+//                return .high
+                return .hd1280x720
             case .medium:
-                return .medium
+//                return .medium
+                return .vga640x480
             case .low:
-                return .low
+//                return .low
+                return .cif352x288
             }
         }
+        
+        func width() -> Int {
+            switch self {
+            case .high:
+                return 720
+            case .medium:
+                return 480
+            case .low:
+                return 288
+            }
+        }
+        
+        func height() -> Int {
+            switch self {
+            case .high:
+                return 1280
+            case .medium:
+                return 480
+            case .low:
+                return 352
+            }
+        }
+        
     }
     
     enum AVCaptureError: Error {

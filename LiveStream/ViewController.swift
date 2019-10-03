@@ -16,12 +16,25 @@ class ViewController: UIViewController {
     
     var avCaptureModule: AVCaptureModule?
     var filter : FilterVideo = FilterVideo()
+    var mediaRecorder = MediaRecorder()
+    var isRecording = false
     
     @IBAction func changeFilter(_ sender: UISwipeGestureRecognizer) {
         filter.changeFilter(sender)
     }
     
     
+    @IBAction func Record(_ sender: UIButton) {
+        if isRecording{
+            // Stop
+            isRecording = false
+            mediaRecorder.stopRecording()
+        }else{
+            // Start
+            isRecording = true
+            mediaRecorder.startRecording()
+        }
+    }
     @IBAction func toggleFilter(_ sender: Any) {
         filter.videoFilterOn = !filter.videoFilterOn
         filter.videoFilterOnOff()
@@ -50,6 +63,8 @@ class ViewController: UIViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         filter.previewDelegate = previewView
+        previewView.filterDelegate = mediaRecorder;
+        avCaptureModule?.microphoneCapture?.audioDelegate = mediaRecorder
         avCaptureModule?.cameraCapture?.cameraDelegate = filter
 //        previewView.mirroring = true;
         previewView.mirroring = false

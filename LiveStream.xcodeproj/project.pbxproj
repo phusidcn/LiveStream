@@ -36,6 +36,9 @@
 		81974A222342065E00BB2DE3 /* MediaEncoder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 81974A212342065E00BB2DE3 /* MediaEncoder.swift */; };
 		81E336E3233E1EF500137FB1 /* CameraCapture.swift in Sources */ = {isa = PBXBuildFile; fileRef = 81BE53D8233DEDCF00C761F7 /* CameraCapture.swift */; };
 		81E336E4233E1EF800137FB1 /* MicrophoneCapture.swift in Sources */ = {isa = PBXBuildFile; fileRef = 81E336E1233E1E2C00137FB1 /* MicrophoneCapture.swift */; };
+		DDFB4D462345F82400A91607 /* MediaFileWriter.swift in Sources */ = {isa = PBXBuildFile; fileRef = DDFB4D452345F82400A91607 /* MediaFileWriter.swift */; };
+		DDFB4D482345F84000A91607 /* MediaFileWriterStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = DDFB4D472345F84000A91607 /* MediaFileWriterStore.swift */; };
+		DDFB4D4A2345FC6B00A91607 /* MediaRecorder.swift in Sources */ = {isa = PBXBuildFile; fileRef = DDFB4D492345FC6B00A91607 /* MediaRecorder.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -91,6 +94,9 @@
 		81974A212342065E00BB2DE3 /* MediaEncoder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MediaEncoder.swift; sourceTree = "<group>"; };
 		81BE53D8233DEDCF00C761F7 /* CameraCapture.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraCapture.swift; sourceTree = "<group>"; };
 		81E336E1233E1E2C00137FB1 /* MicrophoneCapture.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MicrophoneCapture.swift; sourceTree = "<group>"; };
+		DDFB4D452345F82400A91607 /* MediaFileWriter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MediaFileWriter.swift; sourceTree = "<group>"; };
+		DDFB4D472345F84000A91607 /* MediaFileWriterStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MediaFileWriterStore.swift; sourceTree = "<group>"; };
+		DDFB4D492345FC6B00A91607 /* MediaRecorder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MediaRecorder.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -204,6 +210,7 @@
 		817119B2233C70A400595A7B /* LiveStream */ = {
 			isa = PBXGroup;
 			children = (
+				DDFB4D442345F80A00A91607 /* MediaWriter */,
 				817119B7233C70A400595A7B /* ViewController.swift */,
 				8114B4672345D9E30001D527 /* CanvasMetalView.swift */,
 				8114B44B2345B48B0001D527 /* Filter */,
@@ -245,6 +252,16 @@
 				81E336E1233E1E2C00137FB1 /* MicrophoneCapture.swift */,
 			);
 			path = Capture;
+			sourceTree = "<group>";
+		};
+		DDFB4D442345F80A00A91607 /* MediaWriter */ = {
+			isa = PBXGroup;
+			children = (
+				DDFB4D452345F82400A91607 /* MediaFileWriter.swift */,
+				DDFB4D472345F84000A91607 /* MediaFileWriterStore.swift */,
+				DDFB4D492345FC6B00A91607 /* MediaRecorder.swift */,
+			);
+			path = MediaWriter;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -381,8 +398,10 @@
 				8114B44D2345B49E0001D527 /* FilterVideo.swift in Sources */,
 				8114B45E2345D3D50001D527 /* Luminance.metal in Sources */,
 				8114B44F2345B5D10001D527 /* FrameFilter.swift in Sources */,
+				DDFB4D482345F84000A91607 /* MediaFileWriterStore.swift in Sources */,
 				817119B8233C70A400595A7B /* ViewController.swift in Sources */,
 				817119E5233C712400595A7B /* AVCaptureModule.swift in Sources */,
+				DDFB4D4A2345FC6B00A91607 /* MediaRecorder.swift in Sources */,
 				81E336E3233E1EF500137FB1 /* CameraCapture.swift in Sources */,
 				8114B4602345D3DE0001D527 /* LowContract.metal in Sources */,
 				817119B4233C70A400595A7B /* AppDelegate.swift in Sources */,
@@ -391,6 +410,7 @@
 				8114B4542345D2020001D527 /* Luminance.swift in Sources */,
 				72153E3023417B89009EF4B3 /* VideoRecorder.swift in Sources */,
 				8114B4522345D1500001D527 /* Purple.swift in Sources */,
+				DDFB4D462345F82400A91607 /* MediaFileWriter.swift in Sources */,
 				817119B6233C70A400595A7B /* SceneDelegate.swift in Sources */,
 				8114B4622345D3F00001D527 /* ColorInversion.metal in Sources */,
 				8114B4642345D3FA0001D527 /* Lookup.metal in Sources */,
@@ -576,14 +596,14 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = SKQY859ZK7;
+				DEVELOPMENT_TEAM = V4K6YSYUT4;
 				INFOPLIST_FILE = LiveStream/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = za.fresher.assignment.LiveStream;
+				PRODUCT_BUNDLE_IDENTIFIER = CPU12015.Testef;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_VERSION = 5.0;
@@ -597,14 +617,14 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = SKQY859ZK7;
+				DEVELOPMENT_TEAM = V4K6YSYUT4;
 				INFOPLIST_FILE = LiveStream/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = za.fresher.assignment.LiveStream;
+				PRODUCT_BUNDLE_IDENTIFIER = CPU12015.Testef;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_VERSION = 5.0;

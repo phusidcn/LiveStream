@@ -91,6 +91,7 @@ class FilterVideo: NSObject, CameraCaptureDelegate {
                 finalVideoPixelBuffer = filteredBuffer
             }
         }
+        print("Presentation time anh time stamp : \(CMSampleBufferGetDecodeTimeStamp(sampleBuffer))  and  \(CMSampleBufferGetDuration(sampleBuffer))")
         self.previewDelegate?.didCapturePixelBuffer(finalVideoPixelBuffer, CMSampleBufferGetDecodeTimeStamp(sampleBuffer), CMSampleBufferGetDuration(sampleBuffer))
     }
     

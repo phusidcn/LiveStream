@@ -148,6 +148,7 @@ class CameraCapture: NSObject {
 //MARK: VideoDataOutputSampleBufferDelegate
 extension CameraCapture: AVCaptureVideoDataOutputSampleBufferDelegate {
     func captureOutput(_ output: AVCaptureOutput, didOutput sampleBuffer: CMSampleBuffer, from connection: AVCaptureConnection) {
+//        print("hahaha")
         self.cameraDelegate?.didCaptureCameraBuffer(sampleBuffer)
     }
 }

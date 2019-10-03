@@ -12,7 +12,7 @@ import CoreVideo
 import Metal
 
 
-class LowContractFilter : FrameFilter {
+class LowContract : FrameFilter {
     
     var description: String = "LowContract (Metal)"
     

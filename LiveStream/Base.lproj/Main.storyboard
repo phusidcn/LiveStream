@@ -23,13 +23,23 @@
                                     <outletCollection property="gestureRecognizers" destination="uuS-8V-JG2" appends="YES" id="RXY-co-YZm"/>
                                 </connections>
                             </mtkView>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="WKL-H7-yiK">
+                                <rect key="frame" x="159" y="734" width="96" height="96"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="96" id="OcC-PX-FAd"/>
+                                    <constraint firstAttribute="height" constant="96" id="Prh-Ek-VPA"/>
+                                </constraints>
+                                <state key="normal" title="Record"/>
+                            </button>
                         </subviews>
                         <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
                         <constraints>
-                            <constraint firstItem="xCX-qe-mIl" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" id="BTP-2i-Dxe"/>
-                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="xCX-qe-mIl" secondAttribute="trailing" id="bnn-QP-akV"/>
-                            <constraint firstItem="xCX-qe-mIl" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" id="wRH-Gv-y5o"/>
-                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="bottom" secondItem="xCX-qe-mIl" secondAttribute="bottom" id="yxV-sN-JPB"/>
+                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="bottom" secondItem="WKL-H7-yiK" secondAttribute="bottom" constant="32" id="6fP-6i-y87"/>
+                            <constraint firstItem="xCX-qe-mIl" firstAttribute="trailing" secondItem="6Tk-OE-BBY" secondAttribute="trailing" id="Xxo-OT-38W"/>
+                            <constraint firstItem="xCX-qe-mIl" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" id="axZ-U4-hM7"/>
+                            <constraint firstItem="WKL-H7-yiK" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="dVs-L8-a40"/>
+                            <constraint firstItem="xCX-qe-mIl" firstAttribute="bottom" secondItem="6Tk-OE-BBY" secondAttribute="bottom" id="glq-9y-E6Z"/>
+                            <constraint firstItem="xCX-qe-mIl" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" id="rc8-PD-lFx"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                     </view>

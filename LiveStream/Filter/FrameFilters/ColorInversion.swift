@@ -12,7 +12,7 @@ import CoreVideo
 import Metal
 
 
-class ColorInversionFilter : FrameFilter {
+class ColorInversion : FrameFilter {
     
     var description: String = "ColorInversion (Metal)"
     

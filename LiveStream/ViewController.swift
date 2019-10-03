@@ -43,7 +43,8 @@ class ViewController: UIViewController {
     override func viewWillAppear(_ animated: Bool) {
         filter.previewDelegate = previewView
         avCaptureModule?.cameraCapture?.cameraDelegate = filter
-        previewView.mirroring = true;
+//        previewView.mirroring = true;
+        previewView.mirroring = false
         previewView.rotation = .rotate90Degrees
         
         

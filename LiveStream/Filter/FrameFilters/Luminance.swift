@@ -11,7 +11,7 @@ import CoreMedia
 import CoreVideo
 import Metal
 
-class LuminanceFilter : FrameFilter {
+class Luminance : FrameFilter {
     
     var description: String = "Luminance (Metal)"
     

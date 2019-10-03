@@ -241,6 +241,7 @@ class CanvasMetalView: MTKView, FilterVideoDelegate {
             createTextureCache()
             
             colorPixelFormat = .bgra8Unorm
+            depthStencilPixelFormat = MTLPixelFormat.depth32Float
         }
         
         func configureMetal() {
@@ -249,7 +250,7 @@ class CanvasMetalView: MTKView, FilterVideoDelegate {
             pipelineDescriptor.colorAttachments[0].pixelFormat = .bgra8Unorm
             pipelineDescriptor.vertexFunction = defaultLibrary.makeFunction(name: "vertexPassThrough")
             pipelineDescriptor.fragmentFunction = defaultLibrary.makeFunction(name: "fragmentPassThrough")
-            
+            pipelineDescriptor.depthAttachmentPixelFormat = MTLPixelFormat.depth32Float
             // To determine how textures are sampled, create a sampler descriptor to query for a sampler state from the device.
             let samplerDescriptor = MTLSamplerDescriptor()
             samplerDescriptor.sAddressMode = .clampToEdge

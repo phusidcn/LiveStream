@@ -25,8 +25,8 @@ class FilterVideo: NSObject, CameraCaptureDelegate {
     private var videoFilter : FrameFilter?
     private var photoFilter : FrameFilter?
     
-    private let FrameFilters: [FrameFilter] = [LookupFilter(),LowContractFilter(),LuminanceFilter(), ColorInversionFilter(), Purple()]
-    private let photoRenderers: [FrameFilter] = [LookupFilter(),LowContractFilter(),LuminanceFilter(), ColorInversionFilter(), Purple()]
+    private let FrameFilters: [FrameFilter] = [Lookup(),LowContract(),Luminance(), ColorInversion(), Purple()]
+    private let photoRenderers: [FrameFilter] = [Lookup(),LowContract(),Luminance(), ColorInversion(), Purple()]
     
     private let photoOutput = AVCapturePhotoOutput()
     static var processingQueue = DispatchQueue(label: "photo processing queue", attributes: [], autoreleaseFrequency: .workItem)

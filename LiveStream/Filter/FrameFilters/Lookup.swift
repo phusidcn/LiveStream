@@ -11,7 +11,7 @@ import CoreMedia
 import CoreVideo
 import Metal
 
-class LookupFilter : FrameFilter {
+class Lookup : FrameFilter {
     
     var description: String = "Lookup (Metal)"
     

@@ -52,7 +52,7 @@ class MicrophoneCapture: NSObject {
         }
     }
     
-//MARK: Setup methods
+//MARK: Setup
     func setupDevice() throws {
         self.audioDevice = AVCaptureDevice.default(.builtInMicrophone, for: .audio, position: .unspecified)
         if (self.audioDevice == nil) {
@@ -74,6 +74,8 @@ class MicrophoneCapture: NSObject {
             }
         }
     }
+    
+    
     
     func setupDeviceOutput(captureSession: inout AVCaptureSession?) throws {
         self.audioQueue = DispatchQueue(label: "Audio Capture Queue")

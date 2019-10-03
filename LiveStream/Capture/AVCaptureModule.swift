@@ -10,7 +10,7 @@ import AVFoundation
 
 class AVCaptureModule: NSObject {
     
-    init(sessionPreset: AVCaptureSession.Preset? = .high, useCamera: Bool? = true, captureMode: CameraCapture.CameraCaptureMode? = .YUV, useMicrophone: Bool? = true) {
+    init(sessionPreset: AVCaptureSession.Preset? = .high, useCamera: Bool? = true, captureMode: CameraCapture.CameraCaptureColorMode? = .YUV, useMicrophone: Bool? = true) {
         
         super.init()
         
@@ -27,6 +27,15 @@ class AVCaptureModule: NSObject {
             self.microphoneCapture = MicrophoneCapture()
         }
     }
+    
+//MARK: Variables
+    private var captureSession: AVCaptureSession?
+    var cameraCapture: CameraCapture?
+    var microphoneCapture: MicrophoneCapture?
+    private var useCamera: Bool = false
+    private var useMicrophone: Bool = false
+    private var isRunning: Bool = false
+    private var currentCameraInput: CameraCapture.CameraPosition?
     
 //MARK: Camera Authorization
     func cameraAuthorizationStatus() -> CameraCapture.CameraUsageStatus {
@@ -50,23 +59,27 @@ class AVCaptureModule: NSObject {
         })
     }
     
-//MARK: Prepare methods
-    func prepareCamera() -> Array<CameraCapture.CameraCaptureError> {
-        var errorArray : Array<CameraCapture.CameraCaptureError> = Array()
+//MARK: Prepare
+    func prepareCamera(cameraPosition: CameraCapture.CameraPosition? = .back) -> Array<CameraCapture.CameraCaptureError>? {
+        let deviceErrorArray = self.cameraCapture?.setupDevice()
+        if deviceErrorArray != nil {
+            return deviceErrorArray
+        }
+        var errorArray: Array<CameraCapture.CameraCaptureError> = Array()
         
         do {
-            try self.cameraCapture?.setupDevice()
+            if (cameraPosition == .back) {
+                try self.cameraCapture?.addDeviceInput(captureSession: &self.captureSession, captureDevice: self.cameraCapture?.backCaptureDevice)
+            }
+            if (cameraPosition == .front) {
+                try self.cameraCapture?.addDeviceInput(captureSession: &self.captureSession, captureDevice: self.cameraCapture?.frontCaptureDevice)
+            }
         }
         catch {
             errorArray.append(error as! CameraCapture.CameraCaptureError)
         }
         
-        do {
-            try self.cameraCapture?.setupDeviceInput(captureSession: &self.captureSession)
-        }
-        catch {
-            errorArray.append(error as! CameraCapture.CameraCaptureError)
-        }
+        self.currentCameraInput = cameraPosition
         
         do {
             try self.cameraCapture?.setupDeviceOutput(captureSession: &self.captureSession)
@@ -75,6 +88,7 @@ class AVCaptureModule: NSObject {
             errorArray.append(error as! CameraCapture.CameraCaptureError)
         }
         return errorArray
+        
     }
     
     func prepareMicrophone() -> Array<MicrophoneCapture.MicrophoneCaptureError> {
@@ -103,7 +117,7 @@ class AVCaptureModule: NSObject {
         return errorArray
     }
     
-//MARK: Preview methods
+//MARK: Preview
     func startCameraPreviewSession() throws {
         guard self.captureSession != nil else {
             throw AVCaptureError.sessionUnavailable
@@ -126,16 +140,67 @@ class AVCaptureModule: NSObject {
             self.captureSession = nil
         }
     }
-
-//MARK: Variables
-    private var captureSession: AVCaptureSession?
-    private var cameraCapture: CameraCapture?
-    private var microphoneCapture: MicrophoneCapture?
-    private var useCamera: Bool = false
-    private var useMicrophone: Bool = false
-    private var isRunning: Bool = false
-    //FIXME: Where to put this ?????
-    private var currentCameraInput: CameraCapture.CameraPosition?
+    
+//MARK: Switch camera 
+    func switchCamera() throws {
+        guard self.captureSession != nil else {
+            throw AVCaptureError.sessionUnavailable
+        }
+        self.captureSession!.beginConfiguration()
+        
+        func switchToFront() throws {
+            guard self.cameraCapture!.captureDeviceInput != nil else {
+                throw CameraCapture.CameraCaptureError.missingDeviceInput
+            }
+            
+            guard self.cameraCapture!.frontCaptureDevice != nil else {
+                throw CameraCapture.CameraCaptureError.missingFrontDevice
+            }
+            
+            self.captureSession!.removeInput(self.cameraCapture!.captureDeviceInput!)
+            
+            do {
+                try self.cameraCapture?.addDeviceInput(captureSession: &self.captureSession, captureDevice: self.cameraCapture?.frontCaptureDevice)
+            }
+            catch  {
+                throw error
+            }
+        }
+        
+        func switchToBack() throws {
+            guard self.cameraCapture!.captureDeviceInput != nil else {
+                throw CameraCapture.CameraCaptureError.missingDeviceInput
+            }
+            
+            guard self.cameraCapture!.backCaptureDevice != nil else {
+                throw CameraCapture.CameraCaptureError.missingBackDevice
+            }
+            
+            self.captureSession!.removeInput(self.cameraCapture!.captureDeviceInput!)
+            
+            do {
+                try self.cameraCapture?.addDeviceInput(captureSession: &self.captureSession, captureDevice: self.cameraCapture?.backCaptureDevice)
+            }
+            catch  {
+                throw error
+            }
+        }
+        
+        do {
+            switch self.currentCameraInput {
+            case .front:
+                try switchToBack()
+            case .back:
+                try switchToFront()
+            case .none:
+                throw CameraCapture.CameraCaptureError.wtfOperation
+            }
+        }
+        catch {
+            throw(error)
+        }
+        self.captureSession!.commitConfiguration()
+    }
 }
 
 //MARK: enum

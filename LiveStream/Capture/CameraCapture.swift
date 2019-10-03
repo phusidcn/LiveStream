@@ -16,15 +16,13 @@ class CameraCapture: NSObject {
         
 //MARK: Variables
     var orientation: CameraOrientation?
-    var captureMode: CameraCaptureMode?
+    var captureMode: CameraCaptureColorMode?
     
-    var frontCameraDevice: AVCaptureDevice?
-    var backCameraDevice: AVCaptureDevice?
-    
-    var frontDeviceInput: AVCaptureDeviceInput?
-    var backDeviceInput: AVCaptureDeviceInput?
-    
-    var cameraCaptureQueue: DispatchQueue?
+    var frontCaptureDevice: AVCaptureDevice?
+    var backCaptureDevice: AVCaptureDevice?
+    var captureDeviceInput: AVCaptureDeviceInput?
+
+    static var cameraCaptureQueue = DispatchQueue(label: "Camera Capture Queue")
     var videoOutput: AVCaptureVideoDataOutput?
     
     var cameraDelegate: CameraCaptureDelegate?
@@ -55,53 +53,70 @@ class CameraCapture: NSObject {
         }
     }
     
-//MARK: Setup methods
-    func setup(captureMode: CameraCaptureMode? = .YUV) {
+//MARK: Setup
+    func setup(captureMode: CameraCaptureColorMode? = .RGB) {
         self.captureMode = captureMode
+//        self.cameraCaptureQueue = DispatchQueue(label: "Video Capture Queue")
     }
     
-    func setupDevice() throws {
-        let frontDevice = AVCaptureDevice.default(.builtInWideAngleCamera, for: .video, position: .front)
-        if frontDevice != nil {
-            self.frontCameraDevice = frontDevice
+    func setupDevice() -> Array<CameraCaptureError>? {
+        var errorArray: Array<CameraCaptureError> = Array()
+        
+        do {
+            try setupFrontDevice()
+        }
+        catch {
+            errorArray.append(error as! CameraCapture.CameraCaptureError)
         }
         
+        do {
+            try setupBackDevice()
+        }
+        catch {
+            errorArray.append(error as! CameraCapture.CameraCaptureError)
+        }
+        
+        if errorArray.count > 0 {
+            return errorArray
+        }
+        return nil
+    }
+    
+    func setupFrontDevice() throws {
+        let frontDevice = AVCaptureDevice.default(.builtInWideAngleCamera, for: .video, position: .front)
+        if frontDevice != nil {
+            self.frontCaptureDevice = frontDevice
+        }
+        else {
+            throw CameraCaptureError.missingFrontDevice
+        }
+    }
+    
+    func setupBackDevice() throws {
         let backDevice = AVCaptureDevice.default(.builtInWideAngleCamera, for: .video, position: .back)
         if backDevice != nil {
             try backDevice!.lockForConfiguration()
             backDevice!.focusMode = .continuousAutoFocus
             backDevice!.unlockForConfiguration()
-            self.backCameraDevice = backDevice
+            self.backCaptureDevice = backDevice
+        }
+        else {
+            throw CameraCaptureError.missingBackDevice
         }
     }
     
-    func setupDeviceInput(captureSession: inout AVCaptureSession?) throws {
-        var count = 0
+    func addDeviceInput(captureSession: inout AVCaptureSession?, captureDevice: AVCaptureDevice?) throws {
         guard captureSession != nil else {
             throw AVCaptureModule.AVCaptureError.sessionUnavailable
         }
-        if let frontCamDevice = self.frontCameraDevice {
-            self.frontDeviceInput = try AVCaptureDeviceInput(device: frontCamDevice)
-            if captureSession!.canAddInput(self.frontDeviceInput!) {
-                captureSession!.addInput(self.frontDeviceInput!)
-                count += 1
+        if captureDevice != nil {
+            self.captureDeviceInput = try AVCaptureDeviceInput(device:captureDevice!)
+            if captureSession!.canAddInput(self.captureDeviceInput!) {
+                captureSession!.addInput(self.captureDeviceInput!)
             }
-        }
-        if let backCamDevice = self.backCameraDevice {
-            self.backDeviceInput = try AVCaptureDeviceInput(device: backCamDevice)
-            if captureSession!.canAddInput(self.backDeviceInput!) {
-                captureSession!.addInput(self.backDeviceInput!)
-                count += 2
+            else {
+                throw CameraCaptureError.missingDeviceInput
             }
-        }
-        if count == 0 {
-            throw CameraCaptureError.inputUnavailable
-        }
-        if count == 1 {
-            throw CameraCaptureError.missingBackDeviceInput
-        }
-        if count == 2{
-            throw CameraCaptureError.missingFrontDeviceInput
         }
     }
     
@@ -109,17 +124,15 @@ class CameraCapture: NSObject {
         guard captureSession != nil else {
             throw AVCaptureModule.AVCaptureError.sessionUnavailable
         }
-        self.cameraCaptureQueue = DispatchQueue(label: "Video Capture Queue")
-        
         self.videoOutput = AVCaptureVideoDataOutput()
-        self.videoOutput!.setSampleBufferDelegate(self, queue: self.cameraCaptureQueue)
+        self.videoOutput!.setSampleBufferDelegate(self, queue: CameraCapture.cameraCaptureQueue)
         
         if self.captureMode == .YUV {
-            self.videoOutput!.videoSettings = [kCVPixelBufferMetalCompatibilityKey as String: true,
+            self.videoOutput!.videoSettings = [
                                                kCVPixelBufferPixelFormatTypeKey as String: kCVPixelFormatType_420YpCbCr8BiPlanarVideoRange]
         }
         if self.captureMode == .RGB {
-            self.videoOutput!.videoSettings = [kCVPixelBufferMetalCompatibilityKey as String: true,
+            self.videoOutput!.videoSettings = [
                                                kCVPixelBufferPixelFormatTypeKey as String:kCVPixelFormatType_32BGRA]
         }
         if captureSession!.canAddOutput(self.videoOutput!) {
@@ -150,18 +163,17 @@ extension CameraCapture {
         case CameraUsageUnknown
     }
     
-    enum CameraCaptureMode {
+    enum CameraCaptureColorMode {
         case YUV
         case RGB
     }
     
     enum CameraCaptureError: Error {
-        case missingFrontDeviceInput
-        case missingBackDeviceInput
-        case inputUnavailable
+        case missingFrontDevice
+        case missingBackDevice
+        case missingDeviceInput
         case missingDeviceOutput
-        case cameraUnavailable
-        case unknownError
+        case wtfOperation
     }
     
     enum CameraPosition {

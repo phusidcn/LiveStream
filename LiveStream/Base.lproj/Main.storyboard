@@ -16,17 +16,33 @@
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="YkE-3D-FZL">
-                                <rect key="frame" x="184" y="433" width="46" height="30"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <state key="normal" title="Button"/>
-                            </button>
+                            <mtkView contentMode="scaleToFill" colorPixelFormat="BGRA8Unorm" depthStencilPixelFormat="Depth32Float" translatesAutoresizingMaskIntoConstraints="NO" id="xCX-qe-mIl" customClass="CanvasMetalView" customModule="LiveStream" customModuleProvider="target">
+                                <rect key="frame" x="0.0" y="44" width="414" height="818"/>
+                                <gestureRecognizers/>
+                                <connections>
+                                    <outletCollection property="gestureRecognizers" destination="uuS-8V-JG2" appends="YES" id="RXY-co-YZm"/>
+                                </connections>
+                            </mtkView>
                         </subviews>
                         <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                        <constraints>
+                            <constraint firstItem="xCX-qe-mIl" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" id="BTP-2i-Dxe"/>
+                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="xCX-qe-mIl" secondAttribute="trailing" id="bnn-QP-akV"/>
+                            <constraint firstItem="xCX-qe-mIl" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" id="wRH-Gv-y5o"/>
+                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="bottom" secondItem="xCX-qe-mIl" secondAttribute="bottom" id="yxV-sN-JPB"/>
+                        </constraints>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                     </view>
+                    <connections>
+                        <outlet property="previewView" destination="xCX-qe-mIl" id="xUE-W5-7Fd"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
+                <swipeGestureRecognizer direction="right" id="uuS-8V-JG2">
+                    <connections>
+                        <action selector="changeFilter:" destination="BYZ-38-t0r" id="uwW-eN-VuX"/>
+                    </connections>
+                </swipeGestureRecognizer>
             </objects>
             <point key="canvasLocation" x="133" y="123"/>
         </scene>

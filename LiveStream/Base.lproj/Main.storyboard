@@ -31,13 +31,25 @@
                                 </constraints>
                                 <state key="normal" title="Record"/>
                             </button>
+                            <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" on="YES" translatesAutoresizingMaskIntoConstraints="NO" id="O80-Ia-moH">
+                                <rect key="frame" x="306" y="767" width="51" height="31"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="31" id="Ciw-KP-ji4"/>
+                                    <constraint firstAttribute="width" constant="49" id="GvQ-yy-4dr"/>
+                                </constraints>
+                                <connections>
+                                    <action selector="toggleFilter:" destination="BYZ-38-t0r" eventType="valueChanged" id="pOd-K3-Ei3"/>
+                                </connections>
+                            </switch>
                         </subviews>
                         <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
                         <constraints>
                             <constraint firstItem="6Tk-OE-BBY" firstAttribute="bottom" secondItem="WKL-H7-yiK" secondAttribute="bottom" constant="32" id="6fP-6i-y87"/>
+                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="O80-Ia-moH" secondAttribute="trailing" constant="59" id="Ljs-8v-5RA"/>
                             <constraint firstItem="xCX-qe-mIl" firstAttribute="trailing" secondItem="6Tk-OE-BBY" secondAttribute="trailing" id="Xxo-OT-38W"/>
                             <constraint firstItem="xCX-qe-mIl" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" id="axZ-U4-hM7"/>
                             <constraint firstItem="WKL-H7-yiK" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="dVs-L8-a40"/>
+                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="bottom" secondItem="O80-Ia-moH" secondAttribute="bottom" constant="64" id="fBM-z6-GCO"/>
                             <constraint firstItem="xCX-qe-mIl" firstAttribute="bottom" secondItem="6Tk-OE-BBY" secondAttribute="bottom" id="glq-9y-E6Z"/>
                             <constraint firstItem="xCX-qe-mIl" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" id="rc8-PD-lFx"/>
                         </constraints>
@@ -45,6 +57,7 @@
                     </view>
                     <connections>
                         <outlet property="previewView" destination="xCX-qe-mIl" id="xUE-W5-7Fd"/>
+                        <outlet property="toggleButton" destination="O80-Ia-moH" id="UCy-kx-y1P"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>

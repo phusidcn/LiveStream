@@ -12,11 +12,19 @@ class ViewController: UIViewController {
     
     @IBOutlet weak private var previewView: CanvasMetalView!
     
+    @IBOutlet weak var toggleButton: UISwitch!
+    
     var avCaptureModule: AVCaptureModule?
     var filter : FilterVideo = FilterVideo()
     
     @IBAction func changeFilter(_ sender: UISwipeGestureRecognizer) {
         filter.changeFilter(sender)
+    }
+    
+    
+    @IBAction func toggleFilter(_ sender: Any) {
+        filter.videoFilterOn = !filter.videoFilterOn
+        filter.videoFilterOnOff()
     }
     
     override func viewDidLoad() {
@@ -47,6 +55,7 @@ class ViewController: UIViewController {
         previewView.mirroring = false
         previewView.rotation = .rotate90Degrees
         
+        toggleButton.setOn(true, animated: false)
         
         let leftSwipeGesture = UISwipeGestureRecognizer(target: self, action: #selector(changeFilter))
         leftSwipeGesture.direction = .left
@@ -55,14 +64,8 @@ class ViewController: UIViewController {
         let rightSwipeGesture = UISwipeGestureRecognizer(target: self, action: #selector(changeFilter))
         rightSwipeGesture.direction = .right
         previewView.addGestureRecognizer(rightSwipeGesture)
-        
-        let upSwipeGesture = UISwipeGestureRecognizer(target: self, action: #selector(changeFilter))
-        upSwipeGesture.direction = .up
-        previewView.addGestureRecognizer(upSwipeGesture)
-        
-        let downSwipeGesture = UISwipeGestureRecognizer(target: self, action: #selector(changeFilter))
-        downSwipeGesture.direction = .down
-        previewView.addGestureRecognizer(downSwipeGesture)
     }
+    
+    
 }
 

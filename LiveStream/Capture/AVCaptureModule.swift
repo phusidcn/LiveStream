@@ -167,6 +167,7 @@ class AVCaptureModule: NSObject {
             catch  {
                 throw error
             }
+            self.currentCameraInput = .front
         }
         
         func switchToBack() throws {
@@ -186,6 +187,7 @@ class AVCaptureModule: NSObject {
             catch  {
                 throw error
             }
+            self.currentCameraInput = .back
         }
         
         do {

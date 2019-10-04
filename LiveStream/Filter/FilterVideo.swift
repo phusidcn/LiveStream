@@ -96,7 +96,7 @@ class FilterVideo: NSObject, CameraCaptureDelegate {
     }
     
     
-        
+   
     
     
     func videoFilterOnOff(){
@@ -134,6 +134,20 @@ class FilterVideo: NSObject, CameraCaptureDelegate {
         
     }
     
+    
+    func switchCamera(){
+           CameraCapture.cameraCaptureQueue.async {
+               if let filter = self.videoFilter {
+                   filter.reset()
+               }
+           }
+           
+           FilterVideo.processingQueue.async {
+               if let filter = self.photoFilter {
+                   filter.reset()
+               }
+           }
+    }
     func changeFilter(_ gesture: UISwipeGestureRecognizer){
         let filteringEnabled = videoFilterOn
         if filteringEnabled {

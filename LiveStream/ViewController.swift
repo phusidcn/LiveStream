@@ -49,6 +49,19 @@ class ViewController: UIViewController {
             }
         }
     }
+    
+    
+    @IBAction func switchCamera(_ sender: Any) {
+        do {
+            try avCaptureModule?.switchCamera()
+        }
+        catch {
+            
+        }
+        filter.switchCamera()
+    }
+    
+    
     @IBAction func toggleFilter(_ sender: Any) {
         filter.videoFilterOn = !filter.videoFilterOn
         filter.videoFilterOnOff()

@@ -135,6 +135,7 @@ class CameraCapture: NSObject {
             self.videoOutput!.videoSettings = [
                                                kCVPixelBufferPixelFormatTypeKey as String:kCVPixelFormatType_32BGRA]
         }
+        self.videoOutput?.connection(with: .video)?.videoOrientation = .landscapeLeft
         if captureSession!.canAddOutput(self.videoOutput!) {
             captureSession!.addOutput(self.videoOutput!)
         }

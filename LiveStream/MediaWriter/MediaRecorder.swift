@@ -66,7 +66,7 @@ class MediaRecorder: NSObject, CanvasMetalViewDelegate, MicrophoneCaptureDelegat
     }
     
     // Call this funtion to stop recording, video recoded is stored in Photos
-    func stopRecording(){
+    func stopRecording(completion : @escaping (URL) -> Void){
         recoderQueue.async {
             if self.status == .pausing || self.status == .recording{
                 // Stop recording
@@ -77,7 +77,8 @@ class MediaRecorder: NSObject, CanvasMetalViewDelegate, MicrophoneCaptureDelegat
                 self.mediaWriter?.finishWriting(completion: { (url) in
                     // Copy into Photos
                     if url != nil{
-                        self.saveFileIntoPhotos(url: url!)
+                        completion(url!)
+                        
                     }
                 })
             }
@@ -117,39 +118,7 @@ class MediaRecorder: NSObject, CanvasMetalViewDelegate, MicrophoneCaptureDelegat
         }
     }
     
-    private func saveFileIntoPhotos(url : URL){
-        func saveFile(url : URL){
-            PHPhotoLibrary.shared().performChanges({
-                PHAssetChangeRequest.creationRequestForAssetFromVideo(atFileURL: url)
-            }) { saved, error in
-                if saved {
-                    print("save video successfully")
-                }
-                else{
-                    print("save video failed with error \(String(describing: error))")
-                }
-                
-                // You must deelete this file at this url
-                do{
-                    try FileManager.default.removeItem(at: url)
-                }catch{
-                    print("Error when remove file")
-                }
-            }
-        }
-        
-        if PHPhotoLibrary.authorizationStatus() != .authorized{
-            PHPhotoLibrary.requestAuthorization { (authorizationStatus) in
-                if(authorizationStatus == .authorized){
-                    saveFile(url: url)
-                }else{
-                    print("User should authorize this application to access photos data to save this video")
-                }
-            }
-        }else{
-            saveFile(url: url)
-        }
-    }
+    
     
     private func createSampleBufferFrom(pixelBuffer : CVPixelBuffer, presentationTimestamp : CMTime, duration : CMTime) -> CMSampleBuffer?{
         var formatDesc: CMVideoFormatDescription?

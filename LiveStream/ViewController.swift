@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import Photos
 
 class ViewController: UIViewController {
     
@@ -19,6 +20,8 @@ class ViewController: UIViewController {
     var mediaRecorder = MediaRecorder()
     var isRecording = false
     
+    @IBOutlet weak var recordButton: UIButton!
+    
     @IBAction func changeFilter(_ sender: UISwipeGestureRecognizer) {
         filter.changeFilter(sender)
     }
@@ -28,14 +31,21 @@ class ViewController: UIViewController {
         if isRecording{
             // Stop
             isRecording = false
-            mediaRecorder.stopRecording()
+            recordButton.setTitle("Record", for: .normal)
+            recordButton.setTitleColor(UIColor.blue, for: .normal)
+            mediaRecorder.stopRecording { (url) in
+                self.saveFileIntoPhotos(url: url)
+            }
         }else{
             // Start
             isRecording = true
+            recordButton.setTitle("Stop", for: .normal)
+            recordButton.setTitleColor(UIColor.red, for: .normal)
+            
             if #available(iOS 11.0, *) {
                 mediaRecorder.startRecording(mediaType: .MP4, videoCodecType: .h264, outputSize: CGSize(width: avCaptureModule?.quality?.width() ?? 640, height: avCaptureModule?.quality?.height() ?? 480))
             } else {
-                // Fallback on earlier versions
+                
             }
         }
     }
@@ -50,19 +60,29 @@ class ViewController: UIViewController {
         
         // Do any additional setup after loading the view.
         do {
-            avCaptureModule?.requestCameraAuthorization { (Bool) in}
-            avCaptureModule?.requestMicrophoneAuthorization { (Bool) in}
+            avCaptureModule?.requestCameraAuthorization { granted in
+                if !granted{
+                    self.displayAlert(title: "Failed", message: "You shoud authorize this application to access camera", actionTitle: "OK")
+                }
+            }
+            avCaptureModule?.requestMicrophoneAuthorization { granted in
+                if !granted{
+                    self.displayAlert(title: "Failed", message: "You shoud authorize this application to access microphone", actionTitle: "OK")
+                }
+            }
             
             _ = avCaptureModule?.prepareCamera()
             _ = avCaptureModule?.prepareMicrophone()
             try avCaptureModule?.startCameraPreviewSession()
             
-        
+            
         }
         catch  {
             
         }
         
+        recordButton.setTitle("Record", for: .normal)
+        recordButton.setTitleColor(UIColor.blue, for: .normal)
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -70,7 +90,7 @@ class ViewController: UIViewController {
         previewView.filterDelegate = mediaRecorder;
         avCaptureModule?.microphoneCapture?.audioDelegate = mediaRecorder
         avCaptureModule?.cameraCapture?.cameraDelegate = filter
-//        previewView.mirroring = true;
+        //        previewView.mirroring = true;
         previewView.mirroring = false
         previewView.rotation = .rotate90Degrees
         
@@ -85,6 +105,47 @@ class ViewController: UIViewController {
         previewView.addGestureRecognizer(rightSwipeGesture)
     }
     
+    private func saveFileIntoPhotos(url : URL){
+        func saveFile(url : URL){
+            PHPhotoLibrary.shared().performChanges({
+                PHAssetChangeRequest.creationRequestForAssetFromVideo(atFileURL: url)
+            }) { saved, error in
+                if saved {
+                    print("save video successfully")
+                    self.displayAlert(title: "Successed", message: "This video is saved into Photos", actionTitle: "OK")
+                }
+                else{
+                    print("save video failed with error \(String(describing: error))")
+                }
+                
+                // You must deelete this file at this url
+                do{
+                    try FileManager.default.removeItem(at: url)
+                }catch{
+                    print("Error when remove file")
+                }
+            }
+        }
+        
+        if PHPhotoLibrary.authorizationStatus() != .authorized{
+            PHPhotoLibrary.requestAuthorization { (authorizationStatus) in
+                if(authorizationStatus == .authorized){
+                    saveFile(url: url)
+                }else{
+                    self.displayAlert(title: "Failed", message: "User should authorize this application to access photos data to save this video", actionTitle: "OK")
+                }
+            }
+        }else{
+            saveFile(url: url)
+        }
+    }
     
+    func displayAlert(title : String, message : String, actionTitle : String, completion: (() -> Void)? = nil){
+        DispatchQueue.main.async {
+            let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
+            alert.addAction(UIAlertAction(title: "OK", style: .default, handler: { action in  }))
+            self.present(alert, animated: true, completion: completion)
+        }
+    }
 }
 

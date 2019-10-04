@@ -30,6 +30,9 @@
                                     <constraint firstAttribute="height" constant="96" id="Prh-Ek-VPA"/>
                                 </constraints>
                                 <state key="normal" title="Record"/>
+                                <connections>
+                                    <action selector="Record:" destination="BYZ-38-t0r" eventType="touchUpInside" id="g2C-OH-VpW"/>
+                                </connections>
                             </button>
                             <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" on="YES" translatesAutoresizingMaskIntoConstraints="NO" id="O80-Ia-moH">
                                 <rect key="frame" x="306" y="767" width="51" height="31"/>

@@ -34,7 +34,7 @@ class FilterVideo: NSObject, CameraCaptureDelegate {
     
     override init() {
         super.init()
-        videoFilterOn = true
+        videoFilterOn = false
         self.videoFilterOnOff()
     }
     
@@ -91,7 +91,8 @@ class FilterVideo: NSObject, CameraCaptureDelegate {
                 finalVideoPixelBuffer = filteredBuffer
             }
         }
-        self.previewDelegate?.didCapturePixelBuffer(finalVideoPixelBuffer, CMSampleBufferGetDecodeTimeStamp(sampleBuffer), CMSampleBufferGetDuration(sampleBuffer))
+        //print("Presentation time anh time stamp : \(CMSampleBufferGetDecodeTimeStamp(sampleBuffer))  and  \(CMSampleBufferGetDuration(sampleBuffer))")
+        self.previewDelegate?.didCapturePixelBuffer(finalVideoPixelBuffer, CMSampleBufferGetPresentationTimeStamp(sampleBuffer), CMSampleBufferGetDuration(sampleBuffer))
     }
     
     

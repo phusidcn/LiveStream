@@ -12,9 +12,19 @@ import CoreVideo
 import CoreMedia
 import AVFoundation
 
+protocol CanvasMetalViewDelegate {
+    func didOutputPixelBuffer(_ pixelBuffer: CVPixelBuffer, _ presentationTimeStamp: CMTime, _ duration: CMTime)
+}
+
+
 class CanvasMetalView: MTKView, FilterVideoDelegate {
-    func didCapturePixelBuffer(_ pixelBuffer: CVPixelBuffer, _ position: CMTime, _ duration: CMTime) {
+    
+    var filterDelegate: CanvasMetalViewDelegate?
+    
+    func didCapturePixelBuffer(_ pixelBuffer: CVPixelBuffer, _ presentationTimeStamp: CMTime, _ duration: CMTime) {
         self.pixelBuffer = pixelBuffer
+        filterDelegate?.didOutputPixelBuffer(pixelBuffer, presentationTimeStamp, duration)
+        
     }
     
     
@@ -233,7 +243,6 @@ class CanvasMetalView: MTKView, FilterVideoDelegate {
         
         required init(coder: NSCoder) {
             super.init(coder: coder)
-            
             device = MTLCreateSystemDefaultDevice()
             
             configureMetal()

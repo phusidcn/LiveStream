@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import Photos
 
 class ViewController: UIViewController {
     
@@ -19,6 +20,8 @@ class ViewController: UIViewController {
     var mediaRecorder = MediaRecorder()
     var isRecording = false
     
+    @IBOutlet weak var recordButton: UIButton!
+    
     @IBAction func changeFilter(_ sender: UISwipeGestureRecognizer) {
         filter.changeFilter(sender)
     }
@@ -28,14 +31,21 @@ class ViewController: UIViewController {
         if isRecording{
             // Stop
             isRecording = false
-            mediaRecorder.stopRecording()
+            recordButton.setTitle("Record", for: .normal)
+            recordButton.setTitleColor(UIColor.blue, for: .normal)
+            mediaRecorder.stopRecording { (url) in
+                self.saveFileIntoPhotos(url: url)
+            }
         }else{
             // Start
             isRecording = true
+            recordButton.setTitle("Stop", for: .normal)
+            recordButton.setTitleColor(UIColor.red, for: .normal)
+            
             if #available(iOS 11.0, *) {
                 mediaRecorder.startRecording(mediaType: .MP4, videoCodecType: .h264, outputSize: CGSize(width: avCaptureModule?.quality?.width() ?? 640, height: avCaptureModule?.quality?.height() ?? 480))
             } else {
-                // Fallback on earlier versions
+                
             }
         }
     }
@@ -63,6 +73,8 @@ class ViewController: UIViewController {
             
         }
         
+        recordButton.setTitle("Record", for: .normal)
+        recordButton.setTitleColor(UIColor.blue, for: .normal)
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -85,6 +97,39 @@ class ViewController: UIViewController {
         previewView.addGestureRecognizer(rightSwipeGesture)
     }
     
+    private func saveFileIntoPhotos(url : URL){
+        func saveFile(url : URL){
+            PHPhotoLibrary.shared().performChanges({
+                PHAssetChangeRequest.creationRequestForAssetFromVideo(atFileURL: url)
+            }) { saved, error in
+                if saved {
+                    print("save video successfully")
+                }
+                else{
+                    print("save video failed with error \(String(describing: error))")
+                }
+                
+                // You must deelete this file at this url
+                do{
+                    try FileManager.default.removeItem(at: url)
+                }catch{
+                    print("Error when remove file")
+                }
+            }
+        }
+        
+        if PHPhotoLibrary.authorizationStatus() != .authorized{
+            PHPhotoLibrary.requestAuthorization { (authorizationStatus) in
+                if(authorizationStatus == .authorized){
+                    saveFile(url: url)
+                }else{
+                    print("User should authorize this application to access photos data to save this video")
+                }
+            }
+        }else{
+            saveFile(url: url)
+        }
+    }
     
 }
 

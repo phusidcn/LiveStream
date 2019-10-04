@@ -135,7 +135,14 @@ class CameraCapture: NSObject {
             self.videoOutput!.videoSettings = [
                                                kCVPixelBufferPixelFormatTypeKey as String:kCVPixelFormatType_32BGRA]
         }
-        self.videoOutput?.connection(with: .video)?.videoOrientation = .landscapeLeft
+        let videoConnection = self.videoOutput?.connection(with: .video)
+        if videoConnection?.isVideoOrientationSupported ?? false{
+            videoConnection?.videoOrientation = .portrait
+        }
+        if videoConnection?.isVideoMirrored ?? false{
+            videoConnection?.isVideoMirrored = true
+        }
+       
         if captureSession!.canAddOutput(self.videoOutput!) {
             captureSession!.addOutput(self.videoOutput!)
         }

@@ -24,18 +24,14 @@
                                 </connections>
                             </mtkView>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="WKL-H7-yiK">
-                                <rect key="frame" x="159" y="680" width="96" height="96"/>
-                                <constraints>
-                                    <constraint firstAttribute="width" constant="96" id="OcC-PX-FAd"/>
-                                    <constraint firstAttribute="height" constant="96" id="Prh-Ek-VPA"/>
-                                </constraints>
+                                <rect key="frame" x="182.5" y="704" width="49" height="30"/>
                                 <state key="normal" title="Record"/>
                                 <connections>
                                     <action selector="Record:" destination="BYZ-38-t0r" eventType="touchUpInside" id="g2C-OH-VpW"/>
                                 </connections>
                             </button>
                             <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" on="YES" translatesAutoresizingMaskIntoConstraints="NO" id="O80-Ia-moH">
-                                <rect key="frame" x="306" y="713" width="51" height="31"/>
+                                <rect key="frame" x="306" y="703.5" width="51" height="31"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="31" id="Ciw-KP-ji4"/>
                                     <constraint firstAttribute="width" constant="49" id="GvQ-yy-4dr"/>
@@ -55,19 +51,28 @@
                                     <action selector="switchCamera:" destination="BYZ-38-t0r" eventType="touchUpInside" id="rWT-ct-cHk"/>
                                 </connections>
                             </button>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="0" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="7Gu-0j-IZu">
+                                <rect key="frame" x="202" y="672" width="10.5" height="21"/>
+                                <color key="backgroundColor" white="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <color key="textColor" systemColor="secondarySystemGroupedBackgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <nil key="highlightedColor"/>
+                            </label>
                         </subviews>
                         <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
                         <constraints>
-                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="bottom" secondItem="WKL-H7-yiK" secondAttribute="bottom" constant="32" id="6fP-6i-y87"/>
+                            <constraint firstItem="WKL-H7-yiK" firstAttribute="centerY" secondItem="2B1-2R-XNt" secondAttribute="centerY" id="D4L-oN-TeJ"/>
                             <constraint firstItem="6Tk-OE-BBY" firstAttribute="bottom" secondItem="2B1-2R-XNt" secondAttribute="bottom" constant="64" id="KnK-2f-iWI"/>
                             <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="O80-Ia-moH" secondAttribute="trailing" constant="59" id="Ljs-8v-5RA"/>
+                            <constraint firstItem="WKL-H7-yiK" firstAttribute="top" secondItem="7Gu-0j-IZu" secondAttribute="bottom" constant="11" id="W6L-Pb-GEo"/>
                             <constraint firstItem="2B1-2R-XNt" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="64" id="X3Z-0p-S8t"/>
                             <constraint firstItem="xCX-qe-mIl" firstAttribute="trailing" secondItem="6Tk-OE-BBY" secondAttribute="trailing" id="Xxo-OT-38W"/>
                             <constraint firstItem="xCX-qe-mIl" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" id="axZ-U4-hM7"/>
                             <constraint firstItem="WKL-H7-yiK" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="dVs-L8-a40"/>
-                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="bottom" secondItem="O80-Ia-moH" secondAttribute="bottom" constant="64" id="fBM-z6-GCO"/>
                             <constraint firstItem="xCX-qe-mIl" firstAttribute="bottom" secondItem="6Tk-OE-BBY" secondAttribute="bottom" id="glq-9y-E6Z"/>
                             <constraint firstItem="xCX-qe-mIl" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" id="rc8-PD-lFx"/>
+                            <constraint firstItem="O80-Ia-moH" firstAttribute="centerY" secondItem="2B1-2R-XNt" secondAttribute="centerY" id="tJs-oh-tkC"/>
+                            <constraint firstItem="7Gu-0j-IZu" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="wMg-th-wSF"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                     </view>
@@ -75,6 +80,7 @@
                     <connections>
                         <outlet property="previewView" destination="xCX-qe-mIl" id="xUE-W5-7Fd"/>
                         <outlet property="recordButton" destination="WKL-H7-yiK" id="naQ-fJ-f0n"/>
+                        <outlet property="recordingTimeLabel" destination="7Gu-0j-IZu" id="TRO-Ak-kEl"/>
                         <outlet property="toggleButton" destination="O80-Ia-moH" id="UCy-kx-y1P"/>
                     </connections>
                 </viewController>

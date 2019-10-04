@@ -19,7 +19,10 @@ class ViewController: UIViewController {
     var filter : FilterVideo = FilterVideo()
     var mediaRecorder = MediaRecorder()
     var isRecording = false
+    var startRecordingTime : TimeInterval?
+    var displayLink : CADisplayLink?
     
+    @IBOutlet weak var recordingTimeLabel: UILabel!
     @IBOutlet weak var recordButton: UIButton!
     
     @IBAction func changeFilter(_ sender: UISwipeGestureRecognizer) {
@@ -33,6 +36,9 @@ class ViewController: UIViewController {
             isRecording = false
             recordButton.setTitle("Record", for: .normal)
             recordButton.setTitleColor(UIColor.blue, for: .normal)
+            self.displayLink?.invalidate()
+            recordingTimeLabel.isHidden = true
+            
             mediaRecorder.stopRecording { (url) in
                 self.saveFileIntoPhotos(url: url)
             }
@@ -41,6 +47,10 @@ class ViewController: UIViewController {
             isRecording = true
             recordButton.setTitle("Stop", for: .normal)
             recordButton.setTitleColor(UIColor.red, for: .normal)
+            startRecordingTime = Date.timeIntervalSinceReferenceDate
+            self.displayLink = CADisplayLink(target: self, selector: #selector(updateRecordingTime))
+            self.displayLink?.add(to: .current, forMode: .common)
+            recordingTimeLabel.isHidden = false
             
             if #available(iOS 11.0, *) {
                 mediaRecorder.startRecording(mediaType: .MP4, videoCodecType: .h264, outputSize: CGSize(width: avCaptureModule?.quality?.width() ?? 640, height: avCaptureModule?.quality?.height() ?? 480))
@@ -50,6 +60,13 @@ class ViewController: UIViewController {
         }
     }
     
+    @objc func updateRecordingTime(){
+        let timeTotal = Date.timeIntervalSinceReferenceDate - startRecordingTime!
+        
+        let minutes : Int = Int(timeTotal / 60)
+        let sec : Int = Int(timeTotal) - Int(minutes * 60)
+        recordingTimeLabel.text = "" + String(minutes) + ":" + String(sec)
+    }
     
     @IBAction func switchCamera(_ sender: Any) {
         do {
@@ -96,6 +113,8 @@ class ViewController: UIViewController {
         
         recordButton.setTitle("Record", for: .normal)
         recordButton.setTitleColor(UIColor.blue, for: .normal)
+        
+        recordingTimeLabel.isHidden = true
     }
     
     override func viewWillAppear(_ animated: Bool) {

@@ -1,109 +1,222 @@
 //
-//  H264Encoder.swift
-//  LiveStream
+//  H264Encode.swift
+//  CameraCapture
 //
-//  Created by Thang Nguyen Vo Hong on 9/29/19.
-//  Copyright © 2019 ThangNVH. All rights reserved.
+//  Created by Truong Nguyen on 9/27/19.
+//  Copyright © 2019 CPU12015. All rights reserved.
 //
 
+import UIKit
 import AVFoundation
 import VideoToolbox
 
-protocol H264EncoderDelegate {
-    func didOutputH264EncodedBuffer(_ videoBuffer: CMSampleBuffer)
+fileprivate var NALUHeader: [UInt8] = [0, 0, 0, 1]
+
+func compressionOutputCallback(outputCallbackRefCon: UnsafeMutableRawPointer?,
+                               sourceFrameRefCon: UnsafeMutableRawPointer?,
+                               status: OSStatus,
+                               infoFlags: VTEncodeInfoFlags,
+                               sampleBuffer: CMSampleBuffer?) -> Swift.Void
+{
+    var encoderData = Data()
+    
+    guard status == noErr else {
+        print("error: \(status)")
+        return
+    }
+    
+    if infoFlags == .frameDropped {
+        print("frame dropped")
+        return
+    }
+    
+    guard let sampleBuffer = sampleBuffer else {
+        print("sampleBuffer is nil")
+        return
+    }
+    
+    if CMSampleBufferDataIsReady(sampleBuffer) != true {
+        print("sampleBuffer data is not ready")
+        return
+    }
+    
+    let encoder: H264Encoder = Unmanaged.fromOpaque(outputCallbackRefCon!).takeUnretainedValue()
+    
+    if let attachments = CMSampleBufferGetSampleAttachmentsArray(sampleBuffer, createIfNecessary: true) {
+        
+        let rawDic: UnsafeRawPointer = CFArrayGetValueAtIndex(attachments, 0)
+        let dic: CFDictionary = Unmanaged.fromOpaque(rawDic).takeUnretainedValue()
+        
+        // If not contains means it's an IDR frame
+        let keyFrame = !CFDictionaryContainsKey(dic, Unmanaged.passUnretained(kCMSampleAttachmentKey_NotSync).toOpaque())
+        
+        if keyFrame {
+            // print("IDR frame")
+            
+            // sps
+            let format = CMSampleBufferGetFormatDescription(sampleBuffer)
+            var spsSize: Int = 0
+            var spsCount: Int = 0
+            var nalHeaderLength: Int32 = 0
+            var sps: UnsafePointer<UInt8>?
+            var status: OSStatus
+            
+            status = CMVideoFormatDescriptionGetH264ParameterSetAtIndex(format!,
+                                                                        parameterSetIndex: 0,
+                                                                        parameterSetPointerOut: &sps,
+                                                                        parameterSetSizeOut: &spsSize,
+                                                                        parameterSetCountOut: &spsCount,
+                                                                        nalUnitHeaderLengthOut: &nalHeaderLength)
+            if status == noErr {
+                //                print("sps: \(String(describing: sps)), spsSize: \(spsSize), spsCount: \(spsCount), NAL header length: \(nalHeaderLength)")
+                //
+                // pps
+                var ppsSize: Int = 0
+                var ppsCount: Int = 0
+                var pps: UnsafePointer<UInt8>?
+                
+                if CMVideoFormatDescriptionGetH264ParameterSetAtIndex(format!,
+                                                                      parameterSetIndex: 1,
+                                                                      parameterSetPointerOut: &pps,
+                                                                      parameterSetSizeOut: &ppsSize,
+                                                                      parameterSetCountOut: &ppsCount,
+                                                                      nalUnitHeaderLengthOut: &nalHeaderLength) == noErr {
+                    // print("pps: \(String(describing: pps)), ppsSize: \(ppsSize), ppsCount: \(ppsCount), NAL header length: \(nalHeaderLength)")
+                    
+                    let spsData: NSData = NSData(bytes: sps, length: spsSize)
+                    let ppsData: NSData = NSData(bytes: pps, length: ppsSize)
+                    let headerData: NSData = NSData(bytes: NALUHeader, length: NALUHeader.count)
+                    
+                    // Add data into packet
+                    encoderData.append(headerData as Data)
+                    encoderData.append(spsData as Data)
+                    encoderData.append(headerData as Data)
+                    encoderData.append(ppsData as Data)
+                    
+                }
+            }
+            
+        }
+        
+        // Handle frame data
+        guard let dataBuffer = CMSampleBufferGetDataBuffer(sampleBuffer) else {
+            return
+        }
+        
+        var lengthAtOffset: Int = 0
+        var totalLength: Int = 0
+        var dataPointer: UnsafeMutablePointer<Int8>?
+        if CMBlockBufferGetDataPointer(dataBuffer,
+                                       atOffset: 0,
+                                       lengthAtOffsetOut: &lengthAtOffset,
+                                       totalLengthOut: &totalLength,
+                                       dataPointerOut: &dataPointer) == noErr
+        {
+            var bufferOffset: Int = 0
+            let AVCCHeaderLength = 4
+            
+            while bufferOffset < (totalLength - AVCCHeaderLength)
+            {
+                var NALUnitLength: UInt32 = 0
+                // First four character is NALUnit length
+                memcpy(&NALUnitLength, dataPointer?.advanced(by: bufferOffset), AVCCHeaderLength)
+                
+                // Big endian to host endian. in iOS it's little endian
+                NALUnitLength = CFSwapInt32BigToHost(NALUnitLength)
+                
+                let data: NSData = NSData(bytes: dataPointer?.advanced(by: bufferOffset + AVCCHeaderLength), length: Int(NALUnitLength))
+                let headerData: NSData = NSData(bytes: NALUHeader, length: NALUHeader.count)
+                
+                // Add data into packet
+                encoderData.append(headerData as Data)
+                encoderData.append(data as Data)
+                
+                // Move forward to the next NAL Unit
+                bufferOffset += Int(AVCCHeaderLength)
+                bufferOffset += Int(NALUnitLength)
+            }
+        }
+        encoder.delegate?.gotVideoEncodedData(encoderData, timestamp: CMSampleBufferGetPresentationTimeStamp(sampleBuffer))
+    }
 }
 
 
-class H264Encoder: NSObject {
+class H264Encoder: VideoEncoder {
+    
+    var compressionSession: VTCompressionSession?
+    let compressionQueue = DispatchQueue(label: "videotoolbox.compression.compression")
+    
+    override init(_ outputSize: CGSize) {
+        super.init(outputSize)
+        setup()
+    }
     
     override init() {
-        self.frameCount = 0
-        self.encodingQueue = DispatchQueue.global(qos: .default)
         super.init()
-        
+        setup()
     }
     
-    func setup(quality: AVCaptureModule.CaptureQuality ) {
-        let width = quality.width()
-        let height = quality.height()
-        let status: OSStatus = VTCompressionSessionCreate(allocator: nil,
-                                                          width: Int32(width),
-                                                          height: Int32(height),
-                                                          codecType: kCMVideoCodecType_H264,
-                                                          encoderSpecification: nil,
-                                                          imageBufferAttributes: nil,
-                                                          compressedDataAllocator: nil,
-                                                          outputCallback: outputCallback,
-                                                          refcon: Unmanaged.passUnretained(self).toOpaque(),
-                                                          compressionSessionOut: &self.encodingSession)
-        if (status != 0) {
-            print("Can't create H.264 session")
+    func setup() {
+        let status = VTCompressionSessionCreate(allocator: kCFAllocatorDefault,
+                                                width: Int32(outputSize.width),
+                                                height: Int32(outputSize.height),
+                                                codecType:  kCMVideoCodecType_H264,
+                                                encoderSpecification: nil,
+                                                imageBufferAttributes: nil,
+                                                compressedDataAllocator: nil,
+                                                outputCallback: compressionOutputCallback,
+                                                refcon: UnsafeMutableRawPointer(Unmanaged.passUnretained(self).toOpaque()),
+                                                compressionSessionOut: &compressionSession)
+        
+        guard let c = compressionSession else {
+            print("Error when creating compression session: \(status)")
             return
         }
         
-        VTSessionSetProperty(self.encodingSession!, key: kVTCompressionPropertyKey_RealTime, value: kCFBooleanTrue)
-        VTSessionSetProperty(self.encodingSession!, key: kVTCompressionPropertyKey_ProfileLevel, value: kVTProfileLevel_H264_Baseline_AutoLevel)
+        VTSessionSetProperty(c, key: kVTCompressionPropertyKey_ProfileLevel, value: kVTProfileLevel_H264_Main_AutoLevel)
+        VTSessionSetProperty(c, key: kVTCompressionPropertyKey_RealTime, value: true as CFTypeRef)
+        VTSessionSetProperty(c, key: kVTCompressionPropertyKey_MaxKeyFrameInterval, value: 10 as CFTypeRef)
+        VTSessionSetProperty(c, key: kVTCompressionPropertyKey_AverageBitRate, value: outputSize.width * outputSize.height * 2 * 32 as CFTypeRef)
+        VTSessionSetProperty(c, key: kVTCompressionPropertyKey_DataRateLimits, value: [outputSize.width * outputSize.height * 2 * 4, 1] as CFArray)
         
-        var fps = 30
-        let fpsRef = CFNumberCreate(kCFAllocatorDefault, .intType , &fps)
-        VTSessionSetProperty(self.encodingSession!, key: kVTCompressionPropertyKey_ExpectedFrameRate, value: fpsRef)
-        
-        var intervalDuration = 2.0
-        let intervalDurationRef = CFNumberCreate(kCFAllocatorDefault, .doubleType, &intervalDuration)
-        VTSessionSetProperty(self.encodingSession!, key: kVTCompressionPropertyKey_MaxKeyFrameIntervalDuration, value: intervalDurationRef)
-        
-        var bitRate = width * height * 3 * 4 * 8
-        let bitRateRef = CFNumberCreate(kCFAllocatorDefault, .sInt32Type, &bitRate)
-        VTSessionSetProperty(self.encodingSession!, key: kVTCompressionPropertyKey_AverageBitRate, value: bitRateRef)
-        
-        var bitRateLimit = width * height * 3 * 4
-        let bitRateLimitRef = CFNumberCreate(kCFAllocatorDefault, .sInt32Type, &bitRateLimit)
-        VTSessionSetProperty(self.encodingSession!, key: kVTCompressionPropertyKey_DataRateLimits, value: bitRateLimitRef)
-        
-        VTCompressionSessionPrepareToEncodeFrames(self.encodingSession!)
+        VTCompressionSessionPrepareToEncodeFrames(c)
     }
     
-    func encode(_ pixelBuffer: CVPixelBuffer, _ presentationTimeStamp: CMTime, _ duration: CMTime) {
-        self.encodingQueue?.async {
-            var flags : VTEncodeInfoFlags = []
-            let status: OSStatus = VTCompressionSessionEncodeFrame(self.encodingSession!,
-                                                                   imageBuffer: pixelBuffer,
-                                                                   presentationTimeStamp: presentationTimeStamp,
-                                                                   duration: duration,
-                                                                   frameProperties: nil,
-                                                                   sourceFrameRefcon: nil,
-                                                                   infoFlagsOut: &flags)
-            if status != noErr {
-                print("H264 Encode failed with ", status);
-                VTCompressionSessionInvalidate(self.encodingSession!);
-                self.encodingSession = nil
-                return;
-            }
+    override func encode(_ cvImageBuffer: CVImageBuffer, presentationTimestamp: CMTime, duration: CMTime) {
+        if compressionSession == nil{
+            return;
         }
+        VTCompressionSessionEncodeFrame(compressionSession!,
+                                        imageBuffer: cvImageBuffer,
+                                        presentationTimeStamp: presentationTimestamp,
+                                        duration: duration,
+                                        frameProperties: nil,
+                                        sourceFrameRefcon: nil,
+                                        infoFlagsOut: nil)
     }
     
-    func stopEncode() {
-        self.encodingQueue?.async {
-            VTCompressionSessionCompleteFrames(self.encodingSession!, untilPresentationTimeStamp: CMTime.invalid)
-            VTCompressionSessionInvalidate(self.encodingSession!)
-            self.encodingSession = nil
+    override func encode(_ sampleBuffer: CMSampleBuffer) {
+        if compressionSession == nil{
+            return;
         }
-    }
-    
-    var delegate: H264EncoderDelegate?
-    private var outputCallback: VTCompressionOutputCallback = {
-        (outputCallbackRefCon: UnsafeMutableRawPointer?, sourceFrameRefCon: UnsafeMutableRawPointer?,
-        status: OSStatus, infoFlags: VTEncodeInfoFlags, sampleBuffer: CMSampleBuffer?) in
-        guard
-            let refcon: UnsafeMutableRawPointer = outputCallbackRefCon,
-            let sampleBuffer: CMSampleBuffer = sampleBuffer, status == noErr else {
+        guard let pixelbuffer = CMSampleBufferGetImageBuffer(sampleBuffer) else {
             return
         }
-        let encoder: H264Encoder = Unmanaged<H264Encoder>.fromOpaque(refcon).takeUnretainedValue()
-
-        encoder.delegate?.didOutputH264EncodedBuffer(sampleBuffer)
+        
+        let presentationTimestamp = CMSampleBufferGetOutputPresentationTimeStamp(sampleBuffer)
+        let duration = CMSampleBufferGetOutputDuration(sampleBuffer)
+        
+        encode(pixelbuffer, presentationTimestamp: presentationTimestamp, duration: duration)
+        
     }
-    private var frameCount: Int64
-    private var encodingSession: VTCompressionSession?
-    private var encodingQueue: DispatchQueue?
+    
+    override func stopEncode() {
+        guard let compressionSession = compressionSession else {
+            return
+        }
+        
+        VTCompressionSessionCompleteFrames(compressionSession, untilPresentationTimeStamp: CMTime.invalid)
+        VTCompressionSessionInvalidate(compressionSession)
+        self.compressionSession = nil
+    }
 }

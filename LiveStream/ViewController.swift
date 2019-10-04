@@ -60,14 +60,22 @@ class ViewController: UIViewController {
         
         // Do any additional setup after loading the view.
         do {
-            avCaptureModule?.requestCameraAuthorization { (Bool) in}
-            avCaptureModule?.requestMicrophoneAuthorization { (Bool) in}
+            avCaptureModule?.requestCameraAuthorization { granted in
+                if !granted{
+                    self.displayAlert(title: "Failed", message: "You shoud authorize this application to access camera", actionTitle: "OK")
+                }
+            }
+            avCaptureModule?.requestMicrophoneAuthorization { granted in
+                if !granted{
+                    self.displayAlert(title: "Failed", message: "You shoud authorize this application to access microphone", actionTitle: "OK")
+                }
+            }
             
             _ = avCaptureModule?.prepareCamera()
             _ = avCaptureModule?.prepareMicrophone()
             try avCaptureModule?.startCameraPreviewSession()
             
-        
+            
         }
         catch  {
             
@@ -82,7 +90,7 @@ class ViewController: UIViewController {
         previewView.filterDelegate = mediaRecorder;
         avCaptureModule?.microphoneCapture?.audioDelegate = mediaRecorder
         avCaptureModule?.cameraCapture?.cameraDelegate = filter
-//        previewView.mirroring = true;
+        //        previewView.mirroring = true;
         previewView.mirroring = false
         previewView.rotation = .rotate90Degrees
         
@@ -104,6 +112,7 @@ class ViewController: UIViewController {
             }) { saved, error in
                 if saved {
                     print("save video successfully")
+                    self.displayAlert(title: "Successed", message: "This video is saved into Photos", actionTitle: "OK")
                 }
                 else{
                     print("save video failed with error \(String(describing: error))")
@@ -123,7 +132,7 @@ class ViewController: UIViewController {
                 if(authorizationStatus == .authorized){
                     saveFile(url: url)
                 }else{
-                    print("User should authorize this application to access photos data to save this video")
+                    self.displayAlert(title: "Failed", message: "User should authorize this application to access photos data to save this video", actionTitle: "OK")
                 }
             }
         }else{
@@ -131,5 +140,12 @@ class ViewController: UIViewController {
         }
     }
     
+    func displayAlert(title : String, message : String, actionTitle : String, completion: (() -> Void)? = nil){
+        DispatchQueue.main.async {
+            let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
+            alert.addAction(UIAlertAction(title: "OK", style: .default, handler: { action in  }))
+            self.present(alert, animated: true, completion: completion)
+        }
+    }
 }
 

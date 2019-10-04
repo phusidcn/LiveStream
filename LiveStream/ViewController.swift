@@ -32,7 +32,11 @@ class ViewController: UIViewController {
         }else{
             // Start
             isRecording = true
-            mediaRecorder.startRecording()
+            if #available(iOS 11.0, *) {
+                mediaRecorder.startRecording(mediaType: .MP4, videoCodecType: .h264, outputSize: CGSize(width: avCaptureModule?.quality?.width() ?? 640, height: avCaptureModule?.quality?.height() ?? 480))
+            } else {
+                // Fallback on earlier versions
+            }
         }
     }
     @IBAction func toggleFilter(_ sender: Any) {
@@ -42,18 +46,18 @@ class ViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        avCaptureModule = AVCaptureModule.init(sessionPreset: .low, useCamera: true, captureMode: .RGB, useMicrophone: false)
+        avCaptureModule = AVCaptureModule.init(quality: .low, useCamera: true, captureMode: .RGB, useMicrophone: true)
         
         // Do any additional setup after loading the view.
         do {
             avCaptureModule?.requestCameraAuthorization { (Bool) in}
-            //avCaptureModule.requestMicrophoneAuthorization { (Bool) in
-            
-            //}
+            avCaptureModule?.requestMicrophoneAuthorization { (Bool) in}
             
             _ = avCaptureModule?.prepareCamera()
+            _ = avCaptureModule?.prepareMicrophone()
             try avCaptureModule?.startCameraPreviewSession()
-            //avCaptureModule.prepareMicrophone()
+            
+        
         }
         catch  {
             

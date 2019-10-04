@@ -10,11 +10,12 @@ import AVFoundation
 
 class AVCaptureModule: NSObject {
     
-    init(sessionPreset: AVCaptureSession.Preset? = .high, useCamera: Bool? = true, captureMode: CameraCapture.CameraCaptureColorMode? = .YUV, useMicrophone: Bool? = true) {
+    init(quality: CaptureQuality? = .high, useCamera: Bool? = true, captureMode: CameraCapture.CameraCaptureColorMode? = .YUV, useMicrophone: Bool? = true) {
         
         super.init()
         
         self.captureSession = AVCaptureSession()
+        self.quality = quality
         
         if useCamera == true {
             self.useCamera = true
@@ -36,6 +37,7 @@ class AVCaptureModule: NSObject {
     private var useMicrophone: Bool = false
     private var isRunning: Bool = false
     private var currentCameraInput: CameraCapture.CameraPosition?
+    var quality: CaptureQuality?
     
 //MARK: Camera Authorization
     func cameraAuthorizationStatus() -> CameraCapture.CameraUsageStatus {
@@ -109,7 +111,7 @@ class AVCaptureModule: NSObject {
         }
         
         do {
-            try self.cameraCapture?.setupDeviceOutput(captureSession: &self.captureSession)
+            try self.microphoneCapture?.setupDeviceOutput(captureSession: &self.captureSession)
         }
         catch {
             errorArray.append(error as! MicrophoneCapture.MicrophoneCaptureError)

@@ -7,36 +7,20 @@
 //
 
 import UIKit
+import AVFoundation
 
-enum MediaType : Int{
-    case MP4
-    case M4V
-    case M4A
-}
+
 class MediaFIleWriterStore: NSObject {
-    class func CreateMediaWriter(mediaType : MediaType) -> MediaFileWriter?{
-        var mediaWriter : MediaFileWriter?
+    class func CreateVideoWriter(mediaType : MediaWriterFileType, videoCodecType: AVVideoCodecType, outputSize : CGSize) -> MediaFileWriter?{
+        var videoWriter : MediaFileWriter?
         
-        switch mediaType {
-        case .MP4:
-            mediaWriter = MediaFileWriter(fileType: .MP4)
-            if (mediaWriter?.createNewDefaultVideoInput())!, (mediaWriter?.createNewDefaultAudioInput())!{
-                
-            }
-            
-        case .M4V:
-            mediaWriter = MediaFileWriter(fileType: .M4V)
-            if (mediaWriter?.createNewDefaultVideoInput())!, (mediaWriter?.createNewDefaultAudioInput())!{
-                
-            }
-            
-        case .M4A:
-            mediaWriter = MediaFileWriter(fileType: .M4A)
-            if (mediaWriter?.createNewDefaultAudioInput())!{
-                
-            }
+        if mediaType == .MP4 || mediaType == .M4V{
+            videoWriter = MediaFileWriter(fileType: mediaType)
+            _ = videoWriter?.createNewDefaultAudioInput()
+            _ = videoWriter?.createNewVideoInput(videoCodecType: videoCodecType, outputSize: outputSize)
         }
         
-        return mediaWriter
+        return videoWriter!
     }
+   
 }

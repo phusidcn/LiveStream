@@ -9,7 +9,7 @@
 import UIKit
 import AVFoundation
 
-enum FileType : Int{
+enum MediaWriterFileType : Int{
     case MP4
     
     case M4V
@@ -20,11 +20,10 @@ enum FileType : Int{
 class MediaFileWriter: NSObject {
     private let writerQueue = DispatchQueue(label: "file writer queue")
     
-    public var expectsMediaDataInRealTime : Bool = true
-    public var fileExt : String?
-    public var fileType : FileType?
-    public var videoAssetWriterInput: AVAssetWriterInput?
-    public var audioAssetWriterInput: AVAssetWriterInput?
+    private(set) public var expectsMediaDataInRealTime : Bool = true
+    private(set) public var fileExt : String?
+    private(set) public var fileType : MediaWriterFileType?
+    
     public var status : AVAssetWriter.Status{
         get{
             return assetWriter?.status ?? AVAssetWriter.Status.unknown
@@ -36,17 +35,26 @@ class MediaFileWriter: NSObject {
         }
     }
     
+    private var videoAssetWriterInput: AVAssetWriterInput?
+    private var audioAssetWriterInput: AVAssetWriterInput?
     private var assetWriter: AVAssetWriter?
     private var sessionAtSourceTime: CMTime?
     
-    init(fileType : FileType){
+    init(fileType : MediaWriterFileType){
         super.init()
         
         if setupFileWriter(fileType: fileType){
         }
     }
     
-    init(videoWriterInput : AVAssetWriterInput?, audioWriterInput : AVAssetWriterInput?, fileType : FileType){
+    init(fileType : MediaWriterFileType, fileExt : String){
+        super.init()
+        
+        if setupFileWriter(fileType: fileType, fileExt: fileExt){
+        }
+    }
+    
+    init(videoWriterInput : AVAssetWriterInput?, audioWriterInput : AVAssetWriterInput?, fileType : MediaWriterFileType){
         super.init()
         
         self.videoAssetWriterInput = videoWriterInput
@@ -56,7 +64,7 @@ class MediaFileWriter: NSObject {
         }
     }
     
-    init(videoWriterInput : AVAssetWriterInput?, audioWriterInput : AVAssetWriterInput?, fileType : FileType, fileExt : String){
+    init(videoWriterInput : AVAssetWriterInput?, audioWriterInput : AVAssetWriterInput?, fileType : MediaWriterFileType, fileExt : String){
         super.init()
         
         self.videoAssetWriterInput = videoWriterInput
@@ -65,17 +73,18 @@ class MediaFileWriter: NSObject {
         if setupFileWriter(fileType: fileType, fileExt: fileExt){
         }
     }
+    
     /**
      This func must be called before creating data input
      */
-    func setupFileWriter(fileType : FileType) -> Bool{
+    private func setupFileWriter(fileType : MediaWriterFileType) -> Bool{
         return setupFileWriter(fileType: fileType, fileExt: MediaFileWriter.getFileExtentionFrom(fileType: fileType))
     }
     
     /**
-    This func must be called before creating data input
-    */
-    func setupFileWriter(fileType : FileType, fileExt : String) -> Bool{
+     This func must be called before creating data input
+     */
+    private func setupFileWriter(fileType : MediaWriterFileType, fileExt : String) -> Bool{
         var success = true
         
         writerQueue.sync {
@@ -164,7 +173,7 @@ class MediaFileWriter: NSObject {
     }
     
     // MARK: Control
-  
+    
     func startWriting() -> Bool{
         var success = false
         
@@ -180,9 +189,9 @@ class MediaFileWriter: NSObject {
     /**
      @method finishWritingWithCompletionHandler:
      @abstract
-        Marks all unfinished inputs as finished and completes the writing of the output file.
-        After call this function, this Object will be reseted
-    */
+     Marks all unfinished inputs as finished and completes the writing of the output file.
+     After call this function, this Object will be reseted
+     */
     func finishWriting(completion : @escaping (URL?) -> Void){
         writerQueue.async {
             if self.status == .writing{
@@ -245,7 +254,7 @@ class MediaFileWriter: NSObject {
 }
 
 extension MediaFileWriter{
-    private class func getFileExtentionFrom(fileType : FileType) -> String{
+    private class func getFileExtentionFrom(fileType : MediaWriterFileType) -> String{
         var fileExt : String
         
         switch fileType {
@@ -260,7 +269,7 @@ extension MediaFileWriter{
         return fileExt
     }
     
-    private class func getAVFileTypeFrom(fileType : FileType) -> AVFileType{
+    private class func getAVFileTypeFrom(fileType : MediaWriterFileType) -> AVFileType{
         var type : AVFileType
         
         switch fileType {

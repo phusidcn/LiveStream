@@ -10,72 +10,164 @@ import UIKit
 import AVFoundation
 import  Photos
 
+enum MediaRecorderStatus :Int{
+    // Object is newly created and not yet recording
+    case unknow
+    
+    // Object is recording
+    case recording
+    
+    // Object has been running before and is now sopped but not completed
+    case pausing
+    
+    // Stopped
+    case stopped
+}
+
 class MediaRecorder: NSObject, CanvasMetalViewDelegate, MicrophoneCaptureDelegate  {
     var mediaWriter : MediaFileWriter?
-    var isRecording = false
-    
+    var status : MediaRecorderStatus = .unknow
+    let recoderQueue = DispatchQueue(label: "recorder queue")
     override init() {
         super.init()
-        
+        status = .unknow
     }
     
-    func startRecording(){
-        if !isRecording{
-            // Start recording
-            isRecording = true
-            
-            mediaWriter = MediaFIleWriterStore.CreateMediaWriter(mediaType: .MP4)
-            if !(mediaWriter?.startWriting() ?? false){
-                print("Can'nt start recording")
+    // Call this func to start recording video to save into Photos
+    func startRecording(mediaType : MediaWriterFileType, videoCodecType: AVVideoCodecType, outputSize : CGSize){
+        recoderQueue.async {
+            if self.status == .unknow || self.status == .stopped{
+                // Start recording
+                self.status = .recording
+                
+                if #available(iOS 11.0, *) {
+                    self.mediaWriter = MediaFIleWriterStore.CreateVideoWriter(mediaType: mediaType, videoCodecType: videoCodecType, outputSize: outputSize)
+                } else {
+                    // Fallback on earlier versions
+                }
+                if !(self.mediaWriter?.startWriting() ?? false){
+                    print("MediaRecorder: Can't start recording")
+                }else{
+                    print("MediaRecorder: Recording")
+                }
             }
         }
     }
     
-    func stopRecording(){
-        if isRecording{
-            // Stop recording
-            isRecording = false
-            
-            mediaWriter?.finishWriting(completion: { (url) in
-                // Copy into Photos
-                PHPhotoLibrary.shared().performChanges({
-                    PHAssetChangeRequest.creationRequestForAssetFromVideo(atFileURL: url!)
-                }) { saved, error in
-                    if saved {
-                        print("save video successfully")
-                    }
-                    else{
-                        print("save video failed with error \(String(describing: error))")
-                    }
-
-                    // You must deelete this file at this url
-                    do{
-                        try FileManager.default.removeItem(at: url!)
-                    }catch{
-                        print("Error when remove file")
-                    }
-                }
-            })
+    // Call this func (called startRecording before) to pause recording
+    func pause(){
+        recoderQueue.async {
+            if self.status == .recording{
+                self.status = .pausing
+                
+                print("MediaRecorder: pausing")
+            }
         }
     }
     
+    // Call this funtion to stop recording, video recoded is stored in Photos
+    func stopRecording(){
+        recoderQueue.async {
+            if self.status == .pausing || self.status == .recording{
+                // Stop recording
+                self.status = .stopped
+                
+                print("MediaRecorder: stopped")
+                
+                self.mediaWriter?.finishWriting(completion: { (url) in
+                    // Copy into Photos
+                    if url != nil{
+                        self.saveFileIntoPhotos(url: url!)
+                    }
+                })
+            }
+        }
+    }
+    
+    // MARK: Delegate
     func didOutputPixelBuffer(_ pixelBuffer: CVPixelBuffer, _ presentationTimeStamp: CMTime, _ duration: CMTime) {
+        recoderQueue.async {
+            if self.status != .recording {
+                return
+            }
+            let sampleBuffer = self.createSampleBufferFrom(pixelBuffer: pixelBuffer, presentationTimestamp: presentationTimeStamp, duration: duration)
+            if sampleBuffer != nil{
+                self.videoAppend(sampleBuffer: sampleBuffer!)
+            }
+        }
+    }
+    
+    func didCaptureAudioBuffer(_ audioBuffer: CMSampleBuffer) {
+        recoderQueue.async {
+            self.audioAppend(sampleBuffer: audioBuffer)
+        }
+    }
+    
+    // MARK: Helper
+    
+    private func videoAppend(sampleBuffer : CMSampleBuffer){
+        if status == .recording{
+            mediaWriter?.videoAppend(sampleBuffer: sampleBuffer)
+        }
+    }
+    
+    private func audioAppend(sampleBuffer : CMSampleBuffer){
+        if status == .recording{
+            mediaWriter?.audioAppend(sampleBuffer: sampleBuffer)
+        }
+    }
+    
+    private func saveFileIntoPhotos(url : URL){
+        func saveFile(url : URL){
+            PHPhotoLibrary.shared().performChanges({
+                PHAssetChangeRequest.creationRequestForAssetFromVideo(atFileURL: url)
+            }) { saved, error in
+                if saved {
+                    print("save video successfully")
+                }
+                else{
+                    print("save video failed with error \(String(describing: error))")
+                }
+                
+                // You must deelete this file at this url
+                do{
+                    try FileManager.default.removeItem(at: url)
+                }catch{
+                    print("Error when remove file")
+                }
+            }
+        }
+        
+        if PHPhotoLibrary.authorizationStatus() != .authorized{
+            PHPhotoLibrary.requestAuthorization { (authorizationStatus) in
+                if(authorizationStatus == .authorized){
+                    saveFile(url: url)
+                }else{
+                    print("User should authorize this application to access photos data to save this video")
+                }
+            }
+        }else{
+            saveFile(url: url)
+        }
+    }
+    
+    private func createSampleBufferFrom(pixelBuffer : CVPixelBuffer, presentationTimestamp : CMTime, duration : CMTime) -> CMSampleBuffer?{
         var formatDesc: CMVideoFormatDescription?
+        var sampleBuffer: CMSampleBuffer?
+        //print("Height: ",CVPixelBufferGetHeight(pixelBuffer)," width: ",CVPixelBufferGetWidth(pixelBuffer))
+        
         CMVideoFormatDescriptionCreateForImageBuffer(allocator: kCFAllocatorDefault, imageBuffer: pixelBuffer, formatDescriptionOut: &formatDesc)
+        
         if formatDesc != nil  {
-            var sampleBuffer: CMSampleBuffer?
-            var sampleTiming = CMSampleTimingInfo.init(duration: duration, presentationTimeStamp: presentationTimeStamp, decodeTimeStamp: CMTime.invalid)
+            var sampleTiming = CMSampleTimingInfo.init(duration: duration, presentationTimeStamp: presentationTimestamp, decodeTimeStamp: CMTime.invalid)
             CMSampleBufferCreateReadyWithImageBuffer(allocator: kCFAllocatorDefault,
                                                      imageBuffer: pixelBuffer,
                                                      formatDescription: formatDesc!,
                                                      sampleTiming: &sampleTiming,
                                                      sampleBufferOut: &sampleBuffer)
-            mediaWriter?.videoAppend(sampleBuffer: sampleBuffer!)
+            
         }
-    }
-    
-    func didCaptureAudioBuffer(_ audioBuffer: CMSampleBuffer) {
-        mediaWriter?.audioAppend(sampleBuffer: audioBuffer)
+        return sampleBuffer
     }
     
 }

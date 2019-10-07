@@ -138,9 +138,10 @@ class CameraCapture: NSObject {
         let videoConnection = self.videoOutput?.connection(with: .video)
         if videoConnection?.isVideoOrientationSupported ?? false{
             videoConnection?.videoOrientation = .portrait
+            print("record portrait")
         }
         if videoConnection?.isVideoMirrored ?? false{
-            videoConnection?.isVideoMirrored = true
+            videoConnection?.isVideoMirrored = false
         }
        
         if captureSession!.canAddOutput(self.videoOutput!) {

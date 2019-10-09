@@ -94,7 +94,7 @@ extension Data {
         let length = Data(rangeBytes.reversed()).uint32
         self.removeSubrange(range)
         let value = self[0..<Int(length)].string
-        self.removeSubrange(0..<Int(length)
+        self.removeSubrange(0..<Int(length))
         return value
     }
     

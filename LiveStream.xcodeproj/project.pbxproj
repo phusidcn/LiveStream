@@ -37,6 +37,21 @@
 		81974A222342065E00BB2DE3 /* MediaEncoder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 81974A212342065E00BB2DE3 /* MediaEncoder.swift */; };
 		81E336E3233E1EF500137FB1 /* CameraCapture.swift in Sources */ = {isa = PBXBuildFile; fileRef = 81BE53D8233DEDCF00C761F7 /* CameraCapture.swift */; };
 		81E336E4233E1EF800137FB1 /* MicrophoneCapture.swift in Sources */ = {isa = PBXBuildFile; fileRef = 81E336E1233E1E2C00137FB1 /* MicrophoneCapture.swift */; };
+		C202B87F234C9ECF00E5213C /* RTMPDefine.swift in Sources */ = {isa = PBXBuildFile; fileRef = C202B87E234C9ECF00E5213C /* RTMPDefine.swift */; };
+		C202B881234CA72500E5213C /* RTMPPublish.swift in Sources */ = {isa = PBXBuildFile; fileRef = C202B880234CA72500E5213C /* RTMPPublish.swift */; };
+		C2650D26234D7AB10092210F /* AMF0Object.swift in Sources */ = {isa = PBXBuildFile; fileRef = C2650D25234D7AB10092210F /* AMF0Object.swift */; };
+		C2650D28234D7B540092210F /* AMFProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = C2650D27234D7B540092210F /* AMFProtocol.swift */; };
+		C2650D2B234D80980092210F /* RTMP+Data+Byte.swift in Sources */ = {isa = PBXBuildFile; fileRef = C2650D2A234D80980092210F /* RTMP+Data+Byte.swift */; };
+		C2650D2D234D83770092210F /* RTMP+Data+Range.swift in Sources */ = {isa = PBXBuildFile; fileRef = C2650D2C234D83770092210F /* RTMP+Data+Range.swift */; };
+		C2650D2F234D84C00092210F /* RTMP+Data+Append.swift in Sources */ = {isa = PBXBuildFile; fileRef = C2650D2E234D84C00092210F /* RTMP+Data+Append.swift */; };
+		C2650D32234D8A6F0092210F /* RTMP+ExpressibleByIntegerLiteral+Convert.swift in Sources */ = {isa = PBXBuildFile; fileRef = C2650D31234D8A6F0092210F /* RTMP+ExpressibleByIntegerLiteral+Convert.swift */; };
+		C2650D34234D8EDE0092210F /* RTMP+AMF0+UInt.swift in Sources */ = {isa = PBXBuildFile; fileRef = C2650D33234D8EDE0092210F /* RTMP+AMF0+UInt.swift */; };
+		C2650D36234D8F920092210F /* RTMP+AMF0Protocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = C2650D35234D8F920092210F /* RTMP+AMF0Protocol.swift */; };
+		C2650D38234D90C50092210F /* RTMP+AMF0+Double.swift in Sources */ = {isa = PBXBuildFile; fileRef = C2650D37234D90C50092210F /* RTMP+AMF0+Double.swift */; };
+		C2650D3A234D919C0092210F /* RTMP+AMF0+Date.swift in Sources */ = {isa = PBXBuildFile; fileRef = C2650D39234D919C0092210F /* RTMP+AMF0+Date.swift */; };
+		C2650D3C234D92640092210F /* RTMP+AMF0+String.swift in Sources */ = {isa = PBXBuildFile; fileRef = C2650D3B234D92640092210F /* RTMP+AMF0+String.swift */; };
+		C2650D3F234D93C00092210F /* RTMP+AMF0+Array.swift in Sources */ = {isa = PBXBuildFile; fileRef = C2650D3E234D93C00092210F /* RTMP+AMF0+Array.swift */; };
+		C2650D41234D95140092210F /* RTMP+AMF0+Decode.swift in Sources */ = {isa = PBXBuildFile; fileRef = C2650D40234D95140092210F /* RTMP+AMF0+Decode.swift */; };
 		DD058BB623472CD80047F93E /* VideoEncoder.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD058BB523472CD80047F93E /* VideoEncoder.swift */; };
 		DD058BB823472CE20047F93E /* AudioEncoder.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD058BB723472CE20047F93E /* AudioEncoder.swift */; };
 		DDF9FEFD234B377100657A40 /* LiveStreamMediaRecorder.swift in Sources */ = {isa = PBXBuildFile; fileRef = DDF9FEFC234B377100657A40 /* LiveStreamMediaRecorder.swift */; };
@@ -99,6 +114,21 @@
 		81974A212342065E00BB2DE3 /* MediaEncoder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MediaEncoder.swift; sourceTree = "<group>"; };
 		81BE53D8233DEDCF00C761F7 /* CameraCapture.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraCapture.swift; sourceTree = "<group>"; };
 		81E336E1233E1E2C00137FB1 /* MicrophoneCapture.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MicrophoneCapture.swift; sourceTree = "<group>"; };
+		C202B87E234C9ECF00E5213C /* RTMPDefine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RTMPDefine.swift; sourceTree = "<group>"; };
+		C202B880234CA72500E5213C /* RTMPPublish.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RTMPPublish.swift; sourceTree = "<group>"; };
+		C2650D25234D7AB10092210F /* AMF0Object.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AMF0Object.swift; sourceTree = "<group>"; };
+		C2650D27234D7B540092210F /* AMFProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AMFProtocol.swift; sourceTree = "<group>"; };
+		C2650D2A234D80980092210F /* RTMP+Data+Byte.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RTMP+Data+Byte.swift"; sourceTree = "<group>"; };
+		C2650D2C234D83770092210F /* RTMP+Data+Range.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RTMP+Data+Range.swift"; sourceTree = "<group>"; };
+		C2650D2E234D84C00092210F /* RTMP+Data+Append.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RTMP+Data+Append.swift"; sourceTree = "<group>"; };
+		C2650D31234D8A6F0092210F /* RTMP+ExpressibleByIntegerLiteral+Convert.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RTMP+ExpressibleByIntegerLiteral+Convert.swift"; sourceTree = "<group>"; };
+		C2650D33234D8EDE0092210F /* RTMP+AMF0+UInt.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RTMP+AMF0+UInt.swift"; sourceTree = "<group>"; };
+		C2650D35234D8F920092210F /* RTMP+AMF0Protocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RTMP+AMF0Protocol.swift"; sourceTree = "<group>"; };
+		C2650D37234D90C50092210F /* RTMP+AMF0+Double.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RTMP+AMF0+Double.swift"; sourceTree = "<group>"; };
+		C2650D39234D919C0092210F /* RTMP+AMF0+Date.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RTMP+AMF0+Date.swift"; sourceTree = "<group>"; };
+		C2650D3B234D92640092210F /* RTMP+AMF0+String.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RTMP+AMF0+String.swift"; sourceTree = "<group>"; };
+		C2650D3E234D93C00092210F /* RTMP+AMF0+Array.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RTMP+AMF0+Array.swift"; sourceTree = "<group>"; };
+		C2650D40234D95140092210F /* RTMP+AMF0+Decode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RTMP+AMF0+Decode.swift"; sourceTree = "<group>"; };
 		DD058BB523472CD80047F93E /* VideoEncoder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoEncoder.swift; sourceTree = "<group>"; };
 		DD058BB723472CE20047F93E /* AudioEncoder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioEncoder.swift; sourceTree = "<group>"; };
 		DDF9FEFC234B377100657A40 /* LiveStreamMediaRecorder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LiveStreamMediaRecorder.swift; sourceTree = "<group>"; };
@@ -220,6 +250,7 @@
 		817119B2233C70A400595A7B /* LiveStream */ = {
 			isa = PBXGroup;
 			children = (
+				C202B871234C9CE700E5213C /* RTMP */,
 				810B68952347249B0038C779 /* StartViewController.swift */,
 				817119B7233C70A400595A7B /* ViewController.swift */,
 				8114B4672345D9E30001D527 /* CanvasMetalView.swift */,
@@ -263,6 +294,148 @@
 				81E336E1233E1E2C00137FB1 /* MicrophoneCapture.swift */,
 			);
 			path = Capture;
+			sourceTree = "<group>";
+		};
+		C202B871234C9CE700E5213C /* RTMP */ = {
+			isa = PBXGroup;
+			children = (
+				C202B873234C9D4800E5213C /* Session */,
+				C202B875234C9D5B00E5213C /* HandShake */,
+				C202B876234C9D6F00E5213C /* Message */,
+				C202B87A234C9DA000E5213C /* Chunk */,
+				C202B877234C9D7700E5213C /* Response */,
+				C202B874234C9D5400E5213C /* Socket */,
+				C202B87D234C9DB400E5213C /* AMF */,
+				C202B87C234C9DAF00E5213C /* Extension */,
+				C202B87B234C9DA700E5213C /* Mixer */,
+				C202B879234C9D9200E5213C /* VideoCodec */,
+				C202B878234C9D8900E5213C /* AudioCodec */,
+				C202B87E234C9ECF00E5213C /* RTMPDefine.swift */,
+				C202B880234CA72500E5213C /* RTMPPublish.swift */,
+			);
+			path = RTMP;
+			sourceTree = "<group>";
+		};
+		C202B873234C9D4800E5213C /* Session */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Session;
+			sourceTree = "<group>";
+		};
+		C202B874234C9D5400E5213C /* Socket */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Socket;
+			sourceTree = "<group>";
+		};
+		C202B875234C9D5B00E5213C /* HandShake */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = HandShake;
+			sourceTree = "<group>";
+		};
+		C202B876234C9D6F00E5213C /* Message */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Message;
+			sourceTree = "<group>";
+		};
+		C202B877234C9D7700E5213C /* Response */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Response;
+			sourceTree = "<group>";
+		};
+		C202B878234C9D8900E5213C /* AudioCodec */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = AudioCodec;
+			sourceTree = "<group>";
+		};
+		C202B879234C9D9200E5213C /* VideoCodec */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = VideoCodec;
+			sourceTree = "<group>";
+		};
+		C202B87A234C9DA000E5213C /* Chunk */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Chunk;
+			sourceTree = "<group>";
+		};
+		C202B87B234C9DA700E5213C /* Mixer */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Mixer;
+			sourceTree = "<group>";
+		};
+		C202B87C234C9DAF00E5213C /* Extension */ = {
+			isa = PBXGroup;
+			children = (
+				C2650D30234D8A2C0092210F /* ExpressibleByIntegerLiteral */,
+				C2650D29234D80730092210F /* Data */,
+			);
+			path = Extension;
+			sourceTree = "<group>";
+		};
+		C202B87D234C9DB400E5213C /* AMF */ = {
+			isa = PBXGroup;
+			children = (
+				C2650D23234D7A570092210F /* AMF0 */,
+				C2650D24234D7A5E0092210F /* AMF3 */,
+				C2650D27234D7B540092210F /* AMFProtocol.swift */,
+			);
+			path = AMF;
+			sourceTree = "<group>";
+		};
+		C2650D23234D7A570092210F /* AMF0 */ = {
+			isa = PBXGroup;
+			children = (
+				C2650D25234D7AB10092210F /* AMF0Object.swift */,
+				C2650D33234D8EDE0092210F /* RTMP+AMF0+UInt.swift */,
+				C2650D35234D8F920092210F /* RTMP+AMF0Protocol.swift */,
+				C2650D37234D90C50092210F /* RTMP+AMF0+Double.swift */,
+				C2650D39234D919C0092210F /* RTMP+AMF0+Date.swift */,
+				C2650D3B234D92640092210F /* RTMP+AMF0+String.swift */,
+				C2650D3E234D93C00092210F /* RTMP+AMF0+Array.swift */,
+				C2650D40234D95140092210F /* RTMP+AMF0+Decode.swift */,
+			);
+			path = AMF0;
+			sourceTree = "<group>";
+		};
+		C2650D24234D7A5E0092210F /* AMF3 */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = AMF3;
+			sourceTree = "<group>";
+		};
+		C2650D29234D80730092210F /* Data */ = {
+			isa = PBXGroup;
+			children = (
+				C2650D2A234D80980092210F /* RTMP+Data+Byte.swift */,
+				C2650D2C234D83770092210F /* RTMP+Data+Range.swift */,
+				C2650D2E234D84C00092210F /* RTMP+Data+Append.swift */,
+			);
+			path = Data;
+			sourceTree = "<group>";
+		};
+		C2650D30234D8A2C0092210F /* ExpressibleByIntegerLiteral */ = {
+			isa = PBXGroup;
+			children = (
+				C2650D31234D8A6F0092210F /* RTMP+ExpressibleByIntegerLiteral+Convert.swift */,
+			);
+			path = ExpressibleByIntegerLiteral;
 			sourceTree = "<group>";
 		};
 		DDFB4D442345F80A00A91607 /* MediaWriter */ = {
@@ -411,6 +584,8 @@
 				810B68962347249B0038C779 /* StartViewController.swift in Sources */,
 				8114B45E2345D3D50001D527 /* Luminance.metal in Sources */,
 				8114B44F2345B5D10001D527 /* FrameFilter.swift in Sources */,
+				C2650D3F234D93C00092210F /* RTMP+AMF0+Array.swift in Sources */,
+				C2650D34234D8EDE0092210F /* RTMP+AMF0+UInt.swift in Sources */,
 				DDFB4D482345F84000A91607 /* MediaFileWriterStore.swift in Sources */,
 				817119B8233C70A400595A7B /* ViewController.swift in Sources */,
 				817119E5233C712400595A7B /* AVCaptureModule.swift in Sources */,
@@ -418,21 +593,34 @@
 				81E336E3233E1EF500137FB1 /* CameraCapture.swift in Sources */,
 				8114B4602345D3DE0001D527 /* LowContract.metal in Sources */,
 				817119B4233C70A400595A7B /* AppDelegate.swift in Sources */,
+				C2650D32234D8A6F0092210F /* RTMP+ExpressibleByIntegerLiteral+Convert.swift in Sources */,
+				C2650D3C234D92640092210F /* RTMP+AMF0+String.swift in Sources */,
+				C2650D38234D90C50092210F /* RTMP+AMF0+Double.swift in Sources */,
 				72A1F53C2340D14E000B318D /* AACEncoder.swift in Sources */,
 				8114B45C2345D3C90001D527 /* Purple.metal in Sources */,
+				C202B881234CA72500E5213C /* RTMPPublish.swift in Sources */,
 				8114B4542345D2020001D527 /* Luminance.swift in Sources */,
+				C2650D3A234D919C0092210F /* RTMP+AMF0+Date.swift in Sources */,
 				72153E3023417B89009EF4B3 /* VideoRecorder.swift in Sources */,
 				8114B4522345D1500001D527 /* Purple.swift in Sources */,
 				DDFB4D462345F82400A91607 /* MediaFileWriter.swift in Sources */,
+				C2650D28234D7B540092210F /* AMFProtocol.swift in Sources */,
+				C2650D26234D7AB10092210F /* AMF0Object.swift in Sources */,
+				C2650D41234D95140092210F /* RTMP+AMF0+Decode.swift in Sources */,
 				817119B6233C70A400595A7B /* SceneDelegate.swift in Sources */,
 				8114B4622345D3F00001D527 /* ColorInversion.metal in Sources */,
 				8114B4642345D3FA0001D527 /* Lookup.metal in Sources */,
 				8114B4662345D43C0001D527 /* PassThrough.metal in Sources */,
 				8114B45A2345D3A60001D527 /* Lookup.swift in Sources */,
+				C2650D2D234D83770092210F /* RTMP+Data+Range.swift in Sources */,
 				8114B4582345D2370001D527 /* ColorInversion.swift in Sources */,
 				8114B4682345D9E30001D527 /* CanvasMetalView.swift in Sources */,
+				C2650D2F234D84C00092210F /* RTMP+Data+Append.swift in Sources */,
 				72A1F5362340AFCE000B318D /* H264Encoder.swift in Sources */,
+				C202B87F234C9ECF00E5213C /* RTMPDefine.swift in Sources */,
 				81974A222342065E00BB2DE3 /* MediaEncoder.swift in Sources */,
+				C2650D36234D8F920092210F /* RTMP+AMF0Protocol.swift in Sources */,
+				C2650D2B234D80980092210F /* RTMP+Data+Byte.swift in Sources */,
 				DDF9FEFD234B377100657A40 /* LiveStreamMediaRecorder.swift in Sources */,
 				8114B4562345D2170001D527 /* LowContract.swift in Sources */,
 				DD058BB623472CD80047F93E /* VideoEncoder.swift in Sources */,
@@ -612,14 +800,14 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = V4K6YSYUT4;
+				DEVELOPMENT_TEAM = 3NLA5R24DG;
 				INFOPLIST_FILE = LiveStream/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = CPU12015.CameraCapture;
+				PRODUCT_BUNDLE_IDENTIFIER = CPU11899.VNG.LiveStream;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_VERSION = 5.0;
@@ -633,14 +821,14 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = V4K6YSYUT4;
+				DEVELOPMENT_TEAM = 3NLA5R24DG;
 				INFOPLIST_FILE = LiveStream/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = CPU12015.CameraCapture;
+				PRODUCT_BUNDLE_IDENTIFIER = CPU11899.VNG.LiveStream;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_VERSION = 5.0;

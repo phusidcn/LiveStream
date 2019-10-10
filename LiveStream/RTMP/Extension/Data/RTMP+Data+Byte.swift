@@ -32,6 +32,10 @@ extension Data {
         return withUnsafeBytes { $0.pointee }
     }
     
+    var int32: Int32 {
+        return withUnsafeBytes { $0.pointee }
+    }
+    
     var uint32: UInt32 {
         return withUnsafeBytes { $0.pointee }
     }

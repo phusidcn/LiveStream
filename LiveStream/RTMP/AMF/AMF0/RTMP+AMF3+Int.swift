@@ -16,7 +16,7 @@ extension Int: AMF3Encode {
     }
 }
 
-extension Int: AMF3Encode {
+extension Int: AMF3LengthEncode {
     var amf3LengthConvert: Data {
         switch self {
         case 0...0x7f:

@@ -46,7 +46,7 @@ struct AMF0Object : AMF0Protocol {
     }
     
     mutating func appendXML(_ value: String) {
-        data.extendWrite.write(value)
+        //data.extendWrite.write(value)
     }
     
     mutating func appendEcma(_ value: [String : Any?]) {

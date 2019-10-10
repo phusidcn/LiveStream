@@ -8,6 +8,7 @@
 
 import Foundation
 import AVFoundation
+import UIKit
 extension UIDeviceOrientation {
     var avcaptureOrientation: AVCaptureVideoOrientation {
         get {

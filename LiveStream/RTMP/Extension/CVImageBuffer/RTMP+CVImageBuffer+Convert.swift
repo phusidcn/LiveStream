@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import UIKit
 import AVFoundation
 extension CVImageBuffer {
     func convert() -> UIImage {
